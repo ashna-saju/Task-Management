@@ -8,13 +8,13 @@ export class User {
 
   @Column()
   username: string;
-  
+
   @Column()
-  email:string;
+  email: string;
 
   @Column()
   password: string;
 
-  @OneToMany(() => Task, task => task.user)
+  @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
 }
