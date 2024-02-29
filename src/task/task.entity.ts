@@ -15,13 +15,13 @@ export class Task {
   @Column()
   priority: string;
 
-  @Column({ type: 'timestamp' }) 
+  @Column({ type: 'timestamp' })
   dueDate: Date;
 
   @Column({ default: false })
   completed: boolean;
 
-  @ManyToOne(() => User, user => user.tasks)
+  @ManyToOne(() => User, (user) => user.tasks)
   user: User;
 
   @Column()
