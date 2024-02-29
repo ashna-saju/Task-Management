@@ -43,7 +43,7 @@ import { AuthGuard } from '../../auth/auth.guard'; // Adjust the path as per you
 
 @Controller('task')
 export class TaskController {
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) { }
 
   @UseGuards(AuthGuard) // Protect the route with JWT authentication
   @Post()
