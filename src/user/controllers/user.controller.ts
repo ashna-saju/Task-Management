@@ -5,20 +5,18 @@ import { CreateUserDto } from '../dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Post('register')
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<string | User> {
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<string | User> {
     try {
       await this.userService.createUser(createUserDto);
       return 'User successfully added';
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        return error.response.data.message;
+        return error.response.data.message; 
       } else {
-        throw error;
+        throw error; 
       }
     }
   }
@@ -28,3 +26,6 @@ export class UserController {
     return this.userService.findUserById(id);
   }
 }
+
+
+
