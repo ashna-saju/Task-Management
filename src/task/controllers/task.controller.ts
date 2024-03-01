@@ -32,35 +32,29 @@ export class TaskController {
   getTasksByUserId(@Param('userId') userId: number): Promise<Task[]> {
     return this.taskService.getTasksByUserId(userId);
   }
-  // @UseGuards(AuthGuard) 
-  // @Patch(':id')
-  // updateTask(
-  //   @Request() req,
-  //   @Param('id') id: number,
-  //   @Body() updateTaskDto: Partial<Task>
-  // ): Promise<Task> {
-  //   const token = req.headers.authorization.replace('Bearer ', '');
-  //   return this.taskService.updateTask(token, id, updateTaskDto);
-  // }
   @UseGuards(AuthGuard)
   @Patch(':id')
   async updateTask(
     @Request() req,
     @Param('id') id: number,
-    @Body() updateTaskDto: Partial<Task>
-  ): Promise<{ message: string, updatedTask: Task }> {
+    @Body() updateTaskDto: Partial<Task>,
+  ): Promise<{ message: string; updatedTask: Task }> {
     const token = req.headers.authorization.replace('Bearer ', '');
-    const { message, updatedTask } = await this.taskService.updateTask(token, id, updateTaskDto);
+    const { message, updatedTask } = await this.taskService.updateTask(
+      token,
+      id,
+      updateTaskDto,
+    );
     return { message, updatedTask };
   }
 
   @UseGuards(AuthGuard)
-@Delete(':id')
-async deleteTask(
-  @Request() req,
-  @Param('id') id: number,
-): Promise<{ message: string }> {
-  const token = req.headers.authorization.replace('Bearer ', '');
-  return await this.taskService.deleteTask(token, id);
-}
+  @Delete(':id')
+  async deleteTask(
+    @Request() req,
+    @Param('id') id: number,
+  ): Promise<{ message: string }> {
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return await this.taskService.deleteTask(token, id);
+  }
 }

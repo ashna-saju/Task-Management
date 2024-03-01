@@ -34,37 +34,14 @@ export class TaskService {
     return this.taskRepository.find({ where: { userId } });
   }
 
-  // async updateTask(
-  //   token: string,
-  //   id: number,
-  //   updateTaskDto: Partial<Task>,
-  // ): Promise<Task> {
-  //   const task = await this.taskRepository.findOne({ where: { id } });
-  //   const decodedUser = await this.authService.decodeToken(token);
-
-  //   if (!decodedUser || !decodedUser.sub) {
-  //     throw new UnauthorizedException('Invalid or missing token');
-  //   }
-  //   if (!task) {
-  //     throw new NotFoundException('Task not found');
-  //   }
-  //   if (task.userId !== decodedUser.sub) {
-  //     throw new UnauthorizedException(
-  //       'You are not authorized to update this task',
-  //     );
-  //   }
-
-  //   Object.assign(task, updateTaskDto);
-  //   return this.taskRepository.save(task);
-  // }
   async updateTask(
     token: string,
     id: number,
     updateTaskDto: Partial<Task>,
-  ): Promise<{ message: string, updatedTask: Task }> {
+  ): Promise<{ message: string; updatedTask: Task }> {
     const task = await this.taskRepository.findOne({ where: { id } });
     const decodedUser = await this.authService.decodeToken(token);
-  
+
     if (!decodedUser || !decodedUser.sub) {
       throw new UnauthorizedException('Invalid or missing token');
     }
@@ -76,30 +53,31 @@ export class TaskService {
         'You are not authorized to update this task',
       );
     }
-  
+
     Object.assign(task, updateTaskDto);
     const updatedTask = await this.taskRepository.save(task);
     return { message: 'Task updated successfully', updatedTask };
   }
   async deleteTask(token: string, id: number): Promise<{ message: string }> {
     const decodedUser = await this.authService.decodeToken(token);
-  
+
     if (!decodedUser || !decodedUser.sub) {
       throw new UnauthorizedException('Invalid or missing token');
     }
-  
+
     const task = await this.taskRepository.findOne({ where: { id } });
     if (!task) {
       throw new NotFoundException('Task not found');
     }
-  
+
     if (task.userId !== decodedUser.sub) {
-      throw new UnauthorizedException('You are not authorized to delete this task');
+      throw new UnauthorizedException(
+        'You are not authorized to delete this task',
+      );
     }
-    
+
     await this.taskRepository.remove(task);
-    
+
     return { message: 'Task deleted successfully' };
   }
-  
 }
