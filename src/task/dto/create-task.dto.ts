@@ -1,5 +1,3 @@
-import { User } from 'src/user/user.entity';
-
 export class CreateTaskDto {
   id: number;
   title: string;
