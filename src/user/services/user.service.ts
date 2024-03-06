@@ -15,13 +15,12 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    try {
       if (
         !createUserDto.username ||
         !createUserDto.email ||
         !createUserDto.password
       ) {
-        throw new BadRequestException('Missing Fields');
+        throw new BadRequestException('Required Fields are missing');
       }
 
       const existingUser = await this.userRepository.findOne({
@@ -35,10 +34,8 @@ export class UserService {
 
       const newUser = this.userRepository.create(createUserDto);
       await this.userRepository.save(newUser);
-    } catch (error) {
-      throw error;
-    }
-  }
+    } 
+
 
   async findUserById(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
