@@ -7,7 +7,9 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './contants';
 import { Request } from 'express';
-
+/**
+ * Guard to check the authentication of requests.
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
@@ -28,7 +30,11 @@ export class AuthGuard implements CanActivate {
     }
     return true;
   }
-
+  /**
+   * Extracts the JWT token from the request header.
+   * @param request The request object.
+   * @returns The JWT token extracted from the request header, or undefined if not found.
+   */
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
