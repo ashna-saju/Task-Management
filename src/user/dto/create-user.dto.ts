@@ -21,7 +21,7 @@ export class CreateUserDto {
    * @isEmail The email must be a valid email address.
    */
   @IsNotEmpty({ message: 'The email is required' })
-  @IsEmail({}, { message: 'Email should be in valid fomat' })
+  @IsEmail({},{ message: 'Email should be in valid fomat' })
   email: string;
   /**
    * The password of the user.
