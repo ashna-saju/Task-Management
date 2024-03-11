@@ -26,7 +26,7 @@ export class AuthController {
   //2.password:string mandatory not empty
   /**
    * Function to handle user login.
-   * @param signInDto An object containing user ID and password.
+   * @body signInDto An object containing user ID and password.
    * @returns A promise resolving to an object containing an access token.
    */
   @HttpCode(HttpStatus.OK)
