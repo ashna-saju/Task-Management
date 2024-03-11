@@ -23,7 +23,7 @@ export class UserController {
   //Request body shall contain
   //1.username:string mandatory not empty min length - 3
   //2.email:string mandatory unique
-  //3.password:string mandatory not empty
+  //3.password:string mandatory not empty, must contain at least one number, one letter, one special character, and be at least 8 characters long.
   //The system shall check the following:
   //a.If the mandatory field does not have any values, then
   //the system shall return an error message '<Field Name> is required'
@@ -31,7 +31,9 @@ export class UserController {
   //the system shall return an error message 'email must be an email'
   //c.If the email address already exists, then
   //the system shall return an error message 'User with the provided email already exists'
-  //d.If the above validation is passed, then
+  //d.If the password is not in the valid format, then
+  //the system shall return an error message 'Password must contain at least one number, one letter, one special character, and be at least 8 characters long'
+  //e.If the above validation is passed, then
   //1. The system shall save the details to the DB
   //2. System shall return the message ''User added successfully '
   /**

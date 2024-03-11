@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 /**
  * CreateUserDto
  * This DTO class represents the data transfer object for creating a new user.
@@ -27,6 +27,10 @@ export class CreateUserDto {
    * The password of the user.
    * @IsNotEmpty The password is required.
    */
+  @Matches(/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/, {
+    message:
+      'Password must contain at least one number, one letter, one special character, and be at least 8 characters long',
+  })
   @IsNotEmpty({ message: 'The password is required' })
   @IsString()
   password: string;
