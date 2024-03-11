@@ -11,6 +11,14 @@ import { Request } from 'express';
  * Guard to check the authentication of requests.
  */
 @Injectable()
+/**
+ * method to determine if the incoming request is authorized by verifying the JWT token.
+ * If the token is valid, the user payload is attached to the request object.
+ * If the token is missing or invalid, an UnauthorizedException is thrown.
+ * @param context The ExecutionContext object containing information about the current request context.
+ * @returns A Promise<boolean> indicating whether the request is authorized.
+ * @throws UnauthorizedException If the JWT token is missing or invalid.
+ */
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 

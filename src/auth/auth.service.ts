@@ -14,9 +14,12 @@ export class AuthService {
    * @returns A promise resolving to an object containing an access token.
    * @throws UnauthorizedException if authentication fails.
    */
-  async signIn(id: number, pass: string): Promise<{ access_token: string }> {
+  async signIn(
+    id: number,
+    password: string,
+  ): Promise<{ access_token: string }> {
     const user = await this.usersService.findUserById(id);
-    if (user?.password !== pass) {
+    if (user?.password !== password) {
       throw new UnauthorizedException();
     }
     const payload = { sub: user.id, username: user.username };
