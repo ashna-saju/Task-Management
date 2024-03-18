@@ -7,13 +7,13 @@ import {
   Patch,
   Post,
   Request,
-  UseGuards,
-  ValidationPipe,
-} from '@nestjs/common';
-import { CreateTaskDto } from '../dto/create-task.dto';
-import { Task } from '../task.entity';
-import { TaskService } from '../services/task.service';
-import { AuthGuard } from '../../auth/auth.guard';
+  UseGuards
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
+import { CreateTaskDto } from './dto/create-task.dto'
+import { Tasks } from '../entities/task.entity'
+import { TaskService } from './task.service'
+
 /**
  * taskController
  * This controller handles HTTP requests related to task management, which includes:
@@ -22,10 +22,11 @@ import { AuthGuard } from '../../auth/auth.guard';
    - update tasks using task ID.
    - delete tasks using task ID.
  */
-@Controller('task')
+@Controller('tasks')
 export class TaskController {
   constructor(private taskService: TaskService) {}
-  //API URL-POST:/task-management/task/create-task
+
+  //API URL-POST:/tasks
   //Create task details
   // Protected by the AuthGuard, which ensures that only authenticated users can create the task
   //Request body shall contain
@@ -56,16 +57,27 @@ export class TaskController {
    * @returns {Promise<Task>}
    * @memberof TaskController
    */
+  // @UseGuards(AuthGuard)
+  // @Post()
+  // async createTask(
+  //   @Request() req,
+  //   @Body() createTaskDto: CreateTaskDto,
+  // ) {
+  //   const token = req.headers.authorization.replace('Bearer ', '');
+  //   return this.taskService.createTask(token, createTaskDto);
+  // }
   @UseGuards(AuthGuard)
-  @Post('create-task')
-  createTask(
+  @Post()
+  async createTask(
     @Request() req,
-    @Body(new ValidationPipe()) createTaskDto: CreateTaskDto,
-  ): Promise<Task> {
+    @Body() createTaskDto: CreateTaskDto,
+  ) {
     const token = req.headers.authorization.replace('Bearer ', '');
+    console.log(token)
     return this.taskService.createTask(token, createTaskDto);
   }
-  //API URL: GET:/task-management/task/view-task-by-userid/:id
+
+  //API URL: GET:/tasks
   //Retrieves tasks by their user id
   // Protected by the AuthGuard, which ensures that only authenticated users can retrieve the task
   //a. The function takes a parameter 'id' , which specifies the userId of the user to be retrieved.
@@ -78,11 +90,14 @@ export class TaskController {
    * @returns {Promise<Task[]>}
    */
   @UseGuards(AuthGuard)
-  @Get('view-task-by-userid/:userId')
-  getTasksByUserId(@Param('userId') userId: number): Promise<Task[]> {
-    return this.taskService.getTasksByUserId(userId);
+  @Get()
+  async getTasksByUserId(@Request() req) {
+    const user = req.user; 
+    return this.taskService.getTasksByUserId(user.userId); 
   }
-  //API URL: UPDATE:/task-management/task/update-task/:id
+  
+
+  //API URL: UPDATE:/tasks/:id
   //Update task by their task id
   // Protected by the AuthGuard, which ensures that only authenticated users can update the task
   //a. The function takes a parameter 'id' , which specifies the task Id of the task to be updated.
@@ -97,21 +112,17 @@ export class TaskController {
    * @returns {Promise<{ message: string; updatedTask: Task }>}
    */
   @UseGuards(AuthGuard)
-  @Patch('update-task/:id')
+  @Patch(':id')
   async updateTask(
     @Request() req,
-    @Param('id') id: number,
-    @Body(new ValidationPipe()) updateTaskDto: Partial<Task>,
-  ): Promise<{ message: string; updatedTask: Task }> {
+    @Param('id') id: string,
+    @Body() updateTaskDto: Partial<Tasks>,
+  ) {
     const token = req.headers.authorization.replace('Bearer ', '');
-    const { message, updatedTask } = await this.taskService.updateTask(
-      token,
-      id,
-      updateTaskDto,
-    );
-    return { message, updatedTask };
+    return this.taskService.updateTask(token, id, updateTaskDto);
   }
-  //API URL: DELETE:/task-management/task/delete-task/:id
+
+  //API URL: DELETE:/tasks/:id
   //delete task by their task id
   // Protected by the AuthGuard, which ensures that only authenticated users can delete the task
   //a. The function takes a parameter 'id' , which specifies the task Id of the task to be deleted.
@@ -126,12 +137,9 @@ export class TaskController {
    * @returns {Promise<{ message: string }>}
    */
   @UseGuards(AuthGuard)
-  @Delete('remove-task/:id')
-  async deleteTask(
-    @Request() req,
-    @Param('id') id: number,
-  ): Promise<{ message: string }> {
+  @Delete(':id')
+  async deleteTask(@Request() req, @Param('id') id: string) {
     const token = req.headers.authorization.replace('Bearer ', '');
-    return await this.taskService.deleteTask(token, id);
+    return this.taskService.deleteTask(token, id);
   }
 }

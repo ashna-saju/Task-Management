@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { jwtConstants } from './contants';
 import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import { jwtConstants } from './contants';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/services/user.service';
+import { Users } from '../entities/user.entity';
+import { UserService } from 'src/user/user.service';
+
 /**
  * Module for managing authentication-related features.
  * This module encapsulates functionality related to authentication.
@@ -15,15 +16,15 @@ import { UserService } from 'src/user/services/user.service';
 @Module({
   imports: [
     UserModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Users]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
-    }),
+      signOptions: { expiresIn: '1d' }
+    })
   ],
   providers: [AuthService, UserService],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService]
 })
 export class AuthModule {}

@@ -1,24 +1,29 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   Post,
-  ValidationPipe,
-} from '@nestjs/common';
-import { UserService } from '../services/user.service';
-import { User } from '../user.entity';
-import { CreateUserDto } from '../dto/create-user.dto';
+  UseGuards
+} from '@nestjs/common'
+import { UserService } from './user.service'
+import { Users } from '../entities/user.entity'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UserResponseDto } from './dto/user-response.dto'
+import { AuthGuard } from 'src/auth/auth.guard'
+
 /**
  * UserController
  * This controller handles HTTP requests related to user management, which includes:
    - Create a new user.
    - Retrieve user details using ID.
  */
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
-  //API URL-POST:/task-management/user/register
+
+  //API URL-POST:/users
   //Create user details
   //Request body shall contain
   //1.username:string mandatory not empty min length - 3
@@ -37,27 +42,27 @@ export class UserController {
   //1. The system shall save the details to the DB
   //2. System shall return the message ''User added successfully '
   /**
-   * Function create the employee details
+   * Function create the user details
    * @body CreateUserDto
    * @returns {Promise<User>}
    * @memberof UserController
    */
-  @Post('register')
+  @Post()
   async createUser(
-    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
-  ): Promise<string | User> {
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<UserResponseDto> {
     try {
       await this.userService.createUser(createUserDto);
-      return 'User successfully added';
+      return {
+        success: true,
+        message: 'User registration successful.',
+      };
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        return error.response.data.message;
-      } else {
-        throw error;
-      }
+      throw new BadRequestException(error.message);
     }
   }
-  //API URL: GET:/task-management/user/:id
+  
+  //API URL: GET:/users/:id
   //Retrieves a user by their id
   //a. The function takes a parameter 'id' , which specifies the id of the user to be retrieved.
   //b. Then it calls the function 'findUserById' to retrieve the user from the database.
@@ -68,8 +73,25 @@ export class UserController {
    * @param id
    * @returns {Promise<User>}
    */
-  @Get(':id')
-  async findUserById(@Param('id') id: number): Promise<User> {
-    return this.userService.findUserById(id);
+  // @Get(':id')
+  // async findUserById(@Param('id') id: string): Promise<Users> {
+  //   return this.userService.findUserById(id);
+  // }
+
+  //API URL: GET:/users/:username
+  //Retrieves a user by their username
+  //a. The function takes a parameter 'username' , which specifies the id of the user to be retrieved.
+  //b. Then it calls the function 'findUserByUsername' to retrieve the user from the database.
+  //c. If a user with the Username is not found, then it throws a 'NotFoundException' with an error message 'User not found'.
+  //d. If a user is found, then it returns the user object.
+  /**
+   * This function retrieves a user by their username.
+   * @param username
+   * @returns {Promise<User>}
+   */
+  @UseGuards(AuthGuard)
+  @Get(':username')
+  async getUserByUsername(@Param('username') username: string): Promise<Users> {
+    return this.userService.findUserByUsername(username);
   }
 }
