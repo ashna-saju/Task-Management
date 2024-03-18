@@ -4,10 +4,9 @@ import {
   IsBoolean,
   MinLength,
   MaxLength,
-  IsEnum,
-  IsUUID,
+  IsEnum
 } from 'class-validator'
-import { COMPLETION_STATUS_REQUIRED_MESSAGE, DESCRIPTION_MAX_LENGTH, DESCRIPTION_MIN_LENGTH, DESCRIPTION_REQUIRED_MESSAGE, DUE_DATE_REQUIRED_MESSAGE, INVALID_PRIORITY_MESSAGE, PRIORITY_REQUIRED_MESSAGE, TITLE_MAX_LENGTH, TITLE_MIN_LENGTH, TITLE_REQUIRED_MESSAGE } from 'src/validations/task-validation.constants';
+import { taskConfig } from '../../validations/task-validation.config';
 
 
 /**
@@ -30,9 +29,9 @@ export class CreateTaskDto {
    * @maximumLength 20 - The title must contain maximum 20 characters.
    */
   @IsString()
-  @MinLength(TITLE_MIN_LENGTH, { message: `The title must contain at least ${TITLE_MIN_LENGTH} characters` })
-  @MaxLength(TITLE_MAX_LENGTH, { message: `The title must not exceed ${TITLE_MAX_LENGTH} characters` })
-  @IsNotEmpty({ message: TITLE_REQUIRED_MESSAGE })
+  @MinLength(taskConfig.TITLE_MIN_LENGTH, { message: `The title must contain at least ${taskConfig.TITLE_MIN_LENGTH} characters` })
+  @MaxLength(taskConfig.TITLE_MAX_LENGTH, { message: `The title must not exceed ${taskConfig.TITLE_MAX_LENGTH} characters` })
+  @IsNotEmpty({ message: taskConfig.TITLE_REQUIRED_MESSAGE })
   title: string;
   
   /**
@@ -41,24 +40,24 @@ export class CreateTaskDto {
    * @maximumLength 150 - The description must contain maximum 150 characters.
    */
   @IsString()
-  @MinLength(DESCRIPTION_MIN_LENGTH, { message: `The description must contain at least ${DESCRIPTION_MIN_LENGTH} characters` })
-  @MaxLength(DESCRIPTION_MAX_LENGTH, { message: `The description must not exceed ${DESCRIPTION_MAX_LENGTH} characters` })
-  @IsNotEmpty({ message: DESCRIPTION_REQUIRED_MESSAGE })
+  @MinLength(taskConfig.DESCRIPTION_MIN_LENGTH, { message: `The description must contain at least ${taskConfig.DESCRIPTION_MIN_LENGTH} characters` })
+  @MaxLength(taskConfig.DESCRIPTION_MAX_LENGTH, { message: `The description must not exceed ${taskConfig.DESCRIPTION_MAX_LENGTH} characters` })
+  @IsNotEmpty({ message: taskConfig.DESCRIPTION_REQUIRED_MESSAGE })
   description: string;
 
   /**
    * The priority of the task.
    * @enum {Priority} - Must be one of the values defined in the Priority enum.
    */
-  @IsEnum(Priority, { message: INVALID_PRIORITY_MESSAGE })
-  @IsNotEmpty({ message: PRIORITY_REQUIRED_MESSAGE })
+  @IsEnum(Priority, { message: taskConfig.INVALID_PRIORITY_MESSAGE })
+  @IsNotEmpty({ message: taskConfig.PRIORITY_REQUIRED_MESSAGE })
   priority: Priority;
 
   /**
    * The due date of the task.
    * @isDate - Must be a valid date.
    */
-  @IsNotEmpty({ message: DUE_DATE_REQUIRED_MESSAGE })
+  @IsNotEmpty({ message: taskConfig.DUE_DATE_REQUIRED_MESSAGE })
   dueDate: Date;
   
   /**
@@ -73,7 +72,7 @@ export class CreateTaskDto {
    * @isBoolean - Must be a boolean value.
    */
   @IsBoolean()
-  @IsNotEmpty({ message: COMPLETION_STATUS_REQUIRED_MESSAGE })
+  @IsNotEmpty({ message: taskConfig.COMPLETION_STATUS_REQUIRED_MESSAGE })
   completed: boolean;
 
 }

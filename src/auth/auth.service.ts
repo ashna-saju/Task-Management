@@ -38,7 +38,7 @@ export class AuthService {
     if (user && decodePassword(password,user.password)===true) {
       // Include additional fields in the payload
       const payload = {
-        userid: user.id,
+        id: user.id,
         name: user.name,
         username: user.username,
         email: user.email,        

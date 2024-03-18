@@ -2,16 +2,20 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
-  UseGuards
+  UseGuards,
+  Request
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { Users } from '../entities/user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto } from './dto/user-response.dto'
 import { AuthGuard } from 'src/auth/auth.guard'
+import { userResponseMessages } from 'src/responses/user-response-messages.constants'
 
 /**
  * UserController
@@ -47,16 +51,27 @@ export class UserController {
    * @returns {Promise<User>}
    * @memberof UserController
    */
+  // @Post()
+  // async createUser(
+  //   @Body() createUserDto: CreateUserDto,
+  // ): Promise<UserResponseDto> {
+  //   try {
+  //     await this.userService.createUser(createUserDto);
+  //     return {
+  //       success: true,
+  //       message: 'User registration successful.',
+  //     };
+  //   } catch (error) {
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
   @Post()
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
     try {
-      await this.userService.createUser(createUserDto);
-      return {
-        success: true,
-        message: 'User registration successful.',
-      };
+      const newUser = await this.userService.createUser(createUserDto);
+      return new UserResponseDto(true,userResponseMessages.REGISTRATION_SUCCESSFUL );
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -73,10 +88,11 @@ export class UserController {
    * @param id
    * @returns {Promise<User>}
    */
-  // @Get(':id')
-  // async findUserById(@Param('id') id: string): Promise<Users> {
-  //   return this.userService.findUserById(id);
-  // }
+  @UseGuards(AuthGuard)
+  @Get('id/:id')
+  async findUserById(@Param('id') id: string): Promise<Users> {
+    return this.userService.findUserById(id);
+  }
 
   //API URL: GET:/users/:username
   //Retrieves a user by their username
@@ -90,8 +106,44 @@ export class UserController {
    * @returns {Promise<User>}
    */
   @UseGuards(AuthGuard)
-  @Get(':username')
+  @Get('username/:username')
   async getUserByUsername(@Param('username') username: string): Promise<Users> {
     return this.userService.findUserByUsername(username);
+  }  
+
+  
+  @UseGuards(AuthGuard)
+  @Patch()
+  async updateUser(
+    @Body() updateUserDto: Partial<CreateUserDto>,
+    @Request() req: any // Import Request from '@nestjs/common' or 'express'
+  ): Promise<UserResponseDto> {
+    try {
+      const userId = req.user.userid; // Access userId from req.user
+      await this.userService.updateUser(userId, updateUserDto);
+      return {
+        success: true,
+        message: userResponseMessages.DETAILS_UPDATED_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete()
+  async deleteUser(
+    @Request() req: any 
+  ): Promise<UserResponseDto> {
+    try {
+      const userId = req.user.id; 
+      await this.userService.deleteUser(userId);
+      return {
+        success: true,
+        message:userResponseMessages.USER_DELETED_SUCCESSFUL,
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

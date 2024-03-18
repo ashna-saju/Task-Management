@@ -9,7 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Tasks } from '../entities/task.entity'
 import { Repository } from 'typeorm'
 import { TaskResponseDto } from './dto/task-response.dto'
-import { TokenService } from 'src/userAuthentication/token.service'
+import { TokenService } from '../userAuthentication/token.service'
+import { taskResponseMessages } from 'src/responses/task-response-messages.constants'
 @Injectable()
 export class TaskService {
   constructor(
@@ -49,11 +50,13 @@ export class TaskService {
     // createTaskDto.userId = userId;
     // console.log(createTaskDto.userId)
     const userId = await this.tokenService.getUserIdFromToken(token);
+    createTaskDto.title = createTaskDto.title.trim();
+    createTaskDto.description = createTaskDto.description.trim();
     const newTask = this.taskRepository.create({...createTaskDto,userId});
     console.log(newTask)
     const savedTask = await this.taskRepository.save(newTask);
     console.log(savedTask)
-    return new TaskResponseDto<Tasks>(true, 'Task created successfully', savedTask);
+    return new TaskResponseDto<Tasks>(true, taskResponseMessages.TASK_CREATED_SUCCESSFUL, savedTask);
   }
   
   /**
@@ -65,7 +68,7 @@ export class TaskService {
   async getTasksByUserId(userId: string): Promise<Tasks[]> {
     const tasks = await this.taskRepository.find({ where: { userId } });
     if (!tasks || tasks.length === 0) {
-      throw new NotFoundException('No tasks found for the user');
+      throw new NotFoundException(taskResponseMessages.NO_TASKS_FOUND);
     }
     return tasks;
   }
@@ -84,19 +87,20 @@ export class TaskService {
   
   async updateTask(token: string, id: string, updateTaskDto: Partial<Tasks>): Promise<TaskResponseDto<Tasks>> {
     const task = await this.taskRepository.findOne({ where: { id } });
-    const decodedUser = await this.authService.decodeToken(token);
-    if (!decodedUser || !decodedUser.sub) {
-      throw new UnauthorizedException('Invalid or missing token');
-    }
+    // const decodedUser = await this.authService.decodeToken(token);
+    // if (!decodedUser || !decodedUser.sub) {
+    //   throw new UnauthorizedException('Invalid or missing token');
+    // }
+    const userId = await this.tokenService.getUserIdFromToken(token);
     if (!task) {
-      throw new NotFoundException('Task not found');
+      throw new NotFoundException(taskResponseMessages.TASK_NOT_FOUND);
     }
-    if (task.userId !== decodedUser.sub) {
-      throw new UnauthorizedException('You are not authorized to update this task');
+    if (task.userId !== userId) {
+      throw new UnauthorizedException(taskResponseMessages.TASK_UPDATE_UNAUTHORIZED);
     }
     Object.assign(task, updateTaskDto);
     const updatedTask = await this.taskRepository.save(task);
-    return new TaskResponseDto<Tasks>(true, 'Task updated successfully', updatedTask);
+    return new TaskResponseDto<Tasks>(true,taskResponseMessages.TASK_UPDATED_SUCCESSFUL, updatedTask);
   }
   
 
@@ -110,18 +114,19 @@ export class TaskService {
    */
 
   async deleteTask(token: string, id: string): Promise<TaskResponseDto<null>> {
-    const decodedUser = await this.authService.decodeToken(token);
-    if (!decodedUser || !decodedUser.sub) {
-      throw new UnauthorizedException('Invalid or missing token');
-    }
+    // const decodedUser = await this.authService.decodeToken(token);
+    // if (!decodedUser || !decodedUser.sub) {
+    //   throw new UnauthorizedException('Invalid or missing token');
+    // }
     const task = await this.taskRepository.findOne({ where: { id } });
+    const userId = await this.tokenService.getUserIdFromToken(token);
     if (!task) {
-      throw new NotFoundException('Task not found');
+      throw new NotFoundException(taskResponseMessages.TASK_NOT_FOUND);
     }
-    if (task.userId !== decodedUser.sub) {
-      throw new UnauthorizedException('You are not authorized to delete this task');
+    if (task.userId !== userId) {
+      throw new UnauthorizedException(taskResponseMessages.UNAUTHORIZED_TASK_DELETION);
     }
     await this.taskRepository.remove(task);
-    return new TaskResponseDto<null>(true, 'Task deleted successfully');
+    return new TaskResponseDto<null>(true,taskResponseMessages.TASK_DELETED_SUCCESSFUL);
   }
 }

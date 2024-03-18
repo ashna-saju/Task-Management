@@ -1,14 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator'
-import {
-  NAME_REQUIRED_MESSAGE,
-  NAME_MIN_LENGTH,
-  USERNAME_REQUIRED_MESSAGE,
-  USERNAME_MIN_LENGTH,
-  EMAIL_REQUIRED_MESSAGE,
-  EMAIL_INVALID_MESSAGE,
-  PASSWORD_REQUIRED_MESSAGE,
-  PASSWORD_REGEX_MESSAGE,
-} from '../../validations/user-validation.constants';
+import {userConfig
+} from '../../validations/user-validation.config';
 
 /**
  * CreateUserDto
@@ -22,8 +14,8 @@ export class CreateUserDto {
    * @IsNotEmpty The name is required.
    * @minLength 3 The name must be at least 3 characters long.
    */
-  @IsNotEmpty({ message: NAME_REQUIRED_MESSAGE })
-  @MinLength(NAME_MIN_LENGTH, { message: `The name must be at least ${NAME_MIN_LENGTH} characters long` })
+  @IsNotEmpty({ message: userConfig.NAME_REQUIRED_MESSAGE })
+  @MinLength(userConfig.NAME_MIN_LENGTH, { message: `The name must be at least ${userConfig.NAME_MIN_LENGTH} characters long` })
   @IsString()
   name: string;
   /**
@@ -31,8 +23,8 @@ export class CreateUserDto {
    * @IsNotEmpty The username is required.
    * @minLength 5 The username must be at least 5 characters long.
    */
-  @IsNotEmpty({ message: USERNAME_REQUIRED_MESSAGE })
-  @MinLength(USERNAME_MIN_LENGTH, { message: `The username must be at least ${USERNAME_MIN_LENGTH} characters long` })
+  @IsNotEmpty({ message: userConfig.USERNAME_REQUIRED_MESSAGE })
+  @MinLength(userConfig.USERNAME_MIN_LENGTH, { message: `The username must be at least ${userConfig.USERNAME_MIN_LENGTH} characters long` })
   @IsString()
   username: string;
 
@@ -41,8 +33,8 @@ export class CreateUserDto {
    * @IsNotEmpty The email is required.
    * @isEmail The email must be a valid email address.
    */
-  @IsNotEmpty({ message: EMAIL_REQUIRED_MESSAGE })
-  @IsEmail({}, { message: EMAIL_INVALID_MESSAGE })
+  @IsNotEmpty({ message: userConfig.EMAIL_REQUIRED_MESSAGE })
+  @IsEmail({}, { message: userConfig.EMAIL_INVALID_MESSAGE })
   email: string;
 
   /**
@@ -50,9 +42,9 @@ export class CreateUserDto {
    * @IsNotEmpty The password is required.
    */
   @Matches(/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/, {
-    message: PASSWORD_REGEX_MESSAGE,
+    message: userConfig.PASSWORD_REGEX_MESSAGE,
   })
-  @IsNotEmpty({ message: PASSWORD_REQUIRED_MESSAGE })
+  @IsNotEmpty({ message: userConfig.PASSWORD_REQUIRED_MESSAGE })
   @IsString()
   password: string;
 }

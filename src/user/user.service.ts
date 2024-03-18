@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Users } from '../entities/user.entity'
 import { encodePassword } from 'src/utils/bcrypt.utils'
+import { userResponseMessages } from 'src/responses/user-response-messages.constants'
 @Injectable()
 export class UserService {
 
@@ -32,7 +33,7 @@ export class UserService {
     });
     if (existingUserEmail) {
       throw new BadRequestException(
-        'User with the provided email already exists',
+        userResponseMessages.EMAIL_ALREADY_EXISTS,
       );
     }
     const existingUsername = await this.userRepository.findOne({
@@ -40,10 +41,12 @@ export class UserService {
     });
     if (existingUsername) {
       throw new BadRequestException(
-        'User with the provided username already exists',
+        userResponseMessages.USERNAME_ALREADY_EXISTS,
       );
     }
-    createUserDto.email = createUserDto.email.toLowerCase();
+    createUserDto.name = createUserDto.name.trim();
+    createUserDto.username = createUserDto.username.trim();
+    createUserDto.email = createUserDto.email.trim().toLowerCase();
     const password=encodePassword(createUserDto.password)
       console.log(password)
     const newUser = this.userRepository.create({...createUserDto,password});
@@ -57,13 +60,13 @@ export class UserService {
    * @throws NotFoundException if the user with the specified ID is not found.
    * @returns The user object if found.
    */
-  // async findUserById(id: string): Promise<Users> {
-  //   const user = await this.userRepository.findOne({ where: { id },select: ['id', 'username', 'email', 'name'] });
-  //   if (!user) {
-  //     throw new NotFoundException('User not found');
-  //   }
-  //   return user;
-  // }
+  async findUserById(id: string): Promise<Users> {
+    const user = await this.userRepository.findOne({ where: { id },select: ['id', 'username', 'email', 'name'] });
+    if (!user) {
+      throw new NotFoundException(userResponseMessages.USER_NOT_FOUND);
+    }
+    return user;
+  }
 
   /**
    * findUserByUsername
@@ -75,8 +78,35 @@ export class UserService {
   async findUserByUsername(username: string): Promise<Users> {
     const user = await this.userRepository.findOne({ where: { username }});
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(userResponseMessages.USER_NOT_FOUND);
     }
     return user;
   }
+
+  // async updateUser(id: string, updateUserDto: Partial<CreateUserDto>): Promise<void> {
+  //   const user = await this.findUserById(id);
+  //   if (!user) {
+  //     throw new NotFoundException('User not found');
+  //   }
+  //   Object.assign(user, updateUserDto);
+  //   await this.userRepository.save(user);
+  // }
+
+  // async deleteUser(id: string): Promise<void> {
+  //   const user = await this.findUserById(id);
+  //   if (!user) {
+  //     throw new NotFoundException('User not found');
+  //   }
+  //   await this.userRepository.remove(user);
+  // }
+  async updateUser(id: string, updateUserDto: Partial<CreateUserDto>): Promise<void> {
+      const user = await this.findUserById(id);
+      Object.assign(user, updateUserDto);
+      await this.userRepository.save(user);   
+  }
+
+  async deleteUser(id: string): Promise<void> {
+      const user = await this.findUserById(id);
+      await this.userRepository.remove(user);
+}
 }
