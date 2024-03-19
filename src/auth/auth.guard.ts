@@ -5,12 +5,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './contants';
 import { Request } from 'express';
+import { jwtConstants } from './contants';
+
 /**
  * Guard to check the authentication of requests.
  */
 @Injectable()
+
 /**
  * method to determine if the incoming request is authorized by verifying the JWT token.
  * If the token is valid, the user payload is attached to the request object.
@@ -32,12 +34,16 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
+      if (!payload || !payload.name || !payload.email) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();
     }
     return true;
   }
+
   /**
    * Extracts the JWT token from the request header.
    * @param request The request object.

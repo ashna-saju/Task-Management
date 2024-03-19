@@ -1,32 +1,41 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { decodePassword } from 'src/utils/bcrypt.utils';
+import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
     private jwtService: JwtService,
   ) {}
+
   /**
-   * Function to authenticate a user based on provided credentials.
-   * @param id The user ID.
-   * @param pass The user password.
-   * @returns A promise resolving to an object containing an access token.
-   * @throws UnauthorizedException if authentication fails.
+   * Function to authenticate a user based on provided credentials
+   * @body username
+   * @body password
+   * Check if the user exists and the password matches
+   * @returns A promise resolving to an object containing an access token
+   * @throws UnauthorizedException if authentication fails
    */
   async signIn(
-    id: number,
+    username: string,
     password: string,
   ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findUserById(id);
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
+    const user = await this.usersService.findUserByUsername(username);
+    if (user && decodePassword(password, user.password) === true) {
+      const payload = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      };
+      const access_token = await this.jwtService.signAsync(payload);
+      return { access_token };
+    } else {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    const payload = { sub: user.id, username: user.username };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
   }
+
   /**
    * Function to decode a JWT token.
    * @param token The JWT token to decode.

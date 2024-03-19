@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './services/user.service';
-import { UserController } from './controllers/user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
+import { Users } from '../entities/user.entity';
 @Module({
   /**
    * UserModule
    * This module encapsulates functionality related to user management.
    * It provides services for handling user-related operations and controllers for defining API endpoints.
    */
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([Users])],
   providers: [UserService],
   controllers: [UserController],
 })
