@@ -3,15 +3,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { jwtConstants } from './contants';
 import { AuthService } from './auth.service';
-import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
+import { UserModule } from 'src/user/user.module';
 import { Users } from '../entities/user.entity';
 import { UserService } from 'src/user/user.service';
 
 /**
- * Module for managing authentication-related features.
- * This module encapsulates functionality related to authentication.
- * It provides services for handling authentication-related operations and controllers for defining API endpoints.
+ * Module for managing authentication-related features
+ * This module encapsulates functionality related to authentication
+ * It provides services for handling authentication-related operations and controllers for defining API endpoints
  */
 @Module({
   imports: [
@@ -20,11 +20,11 @@ import { UserService } from 'src/user/user.service';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1d' }
-    })
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   providers: [AuthService, UserService],
   controllers: [AuthController],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

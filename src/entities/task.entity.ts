@@ -6,10 +6,11 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-} from 'typeorm'
-import { Users } from '../entities/user.entity'
+} from 'typeorm';
+import { Users } from '../entities/user.entity';
 
 /**
+ * Tasks
  * Entity representing a task.
  */
 @Entity()
@@ -26,7 +27,7 @@ export class Tasks {
   dueDate: Date;
   @Column({ default: false, name: 'is_completed' })
   isCompleted: boolean;
-  @Column({ name: 'updated_by', nullable: true }) 
+  @Column({ name: 'updated_by', nullable: true })
   updatedBy: string;
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -7,21 +7,21 @@ import {
   Post,
   Request,
   UseGuards,
-} from '@nestjs/common'
-import { AuthGuard } from './auth.guard'
-import { AuthService } from './auth.service'
+} from '@nestjs/common';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
 /**
  * authController
  * This controller handles HTTP requests related to authorization, which includes:
    - login.
-   - view user profile.
+   - view profile.
  */
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //API URL: POST:/auth/login
+  //API URL: POST:/auth
   //Login using user details
   //Request body shall contain
   //1.username: string mandatory not empty
@@ -37,23 +37,19 @@ export class AuthController {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
-  //API URL: GET:/task-management/auth/view-profile
+  //API URL: GET:/auth
   /**
    * Function to retrieve the user profile.
    * add the access token in the bearer token section.
    * @returns The user object from the request.
    */
-  // @UseGuards(AuthGuard)
-  // @Get('me')
-  // getProfile(@Request() req) {
-  //   return req.user;
-  // }
   @UseGuards(AuthGuard)
-  @Get('me')
+  @Get()
   async getProfile(@Request() req) {
-    const decodedToken = await this.authService.decodeToken(req.headers.authorization.split(' ')[1]);
-    // Assuming decodedToken contains user information like id, username, name, email
+    const decodedToken = await this.authService.decodeToken(
+      req.headers.authorization.split(' ')[1],
+    );
     const { id, username, name, email } = decodedToken;
-    return {id, username, name, email };
+    return { id, username, name, email };
   }
 }

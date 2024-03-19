@@ -1,13 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn } from 'typeorm'
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+} from 'typeorm'
 import { Tasks } from '../entities/task.entity'
-import { v4 as uuidv4 } from 'uuid';
+
+/**
+ * Users
+ * This entity represents a user in the system.
+ */
 @Entity()
 export class Users {
-  
-  /**
-   * User
-   * This entity represents a user in the system.
-   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
@@ -23,7 +28,7 @@ export class Users {
 
   /**
    * tasks
-   * A collection of tasks associated with this user.
+   * A collection of tasks associated with this user
    */
   @OneToMany(() => Tasks, (task) => task.userId)
   tasks: Tasks[];

@@ -1,13 +1,13 @@
-import { Users } from "src/entities/user.entity";
+/**
+   * Data transfer object for user response
+   * @param success Indicates whether the operation was successful.
+   * @param message Message providing information about the operation.
+   */
 export class UserResponseDto {
-    success: boolean;
-    message: string;
-    user?: Users;
-    constructor(success: boolean, message: string
-      , user?: Users) {
-      this.success = success;
-      this.message = message;
-      this.user = user;
-    }
+  success: boolean;
+  message: string;
+  constructor(success: boolean, message: string) {
+    this.success = success;
+    this.message = message;
   }
-
+}

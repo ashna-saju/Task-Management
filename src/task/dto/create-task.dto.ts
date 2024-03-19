@@ -4,10 +4,9 @@ import {
   IsBoolean,
   MinLength,
   MaxLength,
-  IsEnum
-} from 'class-validator'
+  IsEnum,
+} from 'class-validator';
 import { taskConfig } from '../../validations/task-validation.config';
-
 
 /**
  * Enum representing the priority of a task.
@@ -15,7 +14,7 @@ import { taskConfig } from '../../validations/task-validation.config';
 enum Priority {
   LOW = 'low',
   MEDIUM = 'medium',
-  HIGH = 'high'
+  HIGH = 'high',
 }
 
 /**
@@ -23,25 +22,34 @@ enum Priority {
  */
 export class CreateTaskDto {
   id: string;
+  
   /**
    * The title of the task.
    * @minimumLength 5 - The title must contain at least 5 characters.
    * @maximumLength 20 - The title must contain maximum 20 characters.
    */
   @IsString()
-  @MinLength(taskConfig.TITLE_MIN_LENGTH, { message: `The title must contain at least ${taskConfig.TITLE_MIN_LENGTH} characters` })
-  @MaxLength(taskConfig.TITLE_MAX_LENGTH, { message: `The title must not exceed ${taskConfig.TITLE_MAX_LENGTH} characters` })
+  @MinLength(taskConfig.TITLE_MIN_LENGTH, {
+    message: `The title must contain at least ${taskConfig.TITLE_MIN_LENGTH} characters`,
+  })
+  @MaxLength(taskConfig.TITLE_MAX_LENGTH, {
+    message: `The title must not exceed ${taskConfig.TITLE_MAX_LENGTH} characters`,
+  })
   @IsNotEmpty({ message: taskConfig.TITLE_REQUIRED_MESSAGE })
   title: string;
-  
+
   /**
    * The description of the task.
    * @minimumLength 20 - The description must contain at least 20 characters.
    * @maximumLength 150 - The description must contain maximum 150 characters.
    */
   @IsString()
-  @MinLength(taskConfig.DESCRIPTION_MIN_LENGTH, { message: `The description must contain at least ${taskConfig.DESCRIPTION_MIN_LENGTH} characters` })
-  @MaxLength(taskConfig.DESCRIPTION_MAX_LENGTH, { message: `The description must not exceed ${taskConfig.DESCRIPTION_MAX_LENGTH} characters` })
+  @MinLength(taskConfig.DESCRIPTION_MIN_LENGTH, {
+    message: `The description must contain at least ${taskConfig.DESCRIPTION_MIN_LENGTH} characters`,
+  })
+  @MaxLength(taskConfig.DESCRIPTION_MAX_LENGTH, {
+    message: `The description must not exceed ${taskConfig.DESCRIPTION_MAX_LENGTH} characters`,
+  })
   @IsNotEmpty({ message: taskConfig.DESCRIPTION_REQUIRED_MESSAGE })
   description: string;
 
@@ -59,7 +67,7 @@ export class CreateTaskDto {
    */
   @IsNotEmpty({ message: taskConfig.DUE_DATE_REQUIRED_MESSAGE })
   dueDate: Date;
-  
+
   /**
    * The ID of the user associated with the task.
    * @type {string}
@@ -74,5 +82,4 @@ export class CreateTaskDto {
   @IsBoolean()
   @IsNotEmpty({ message: taskConfig.COMPLETION_STATUS_REQUIRED_MESSAGE })
   completed: boolean;
-
 }

@@ -3,10 +3,10 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { Request } from 'express'
-import { jwtConstants } from './contants'
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
+import { jwtConstants } from './contants';
 
 /**
  * Guard to check the authentication of requests.
@@ -54,7 +54,3 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
-
-
-
-
