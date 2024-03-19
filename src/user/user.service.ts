@@ -58,24 +58,6 @@ export class UserService {
   }
 
   /**
-   * findUserById
-   * Retrieves a user by their id.
-   * @param id The id of the user to be retrieved.
-   * @returns A promise resolving to returning the id, name, username, email if found.
-   * @throws NotFoundException if the user with the specified id is not found.
-   */
-  async findUserById(id: string): Promise<Users> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: ['id', 'name', 'username', 'email'],
-    });
-    if (!user) {
-      throw new NotFoundException(userResponseMessages.USER_NOT_FOUND);
-    }
-    return user;
-  }
-
-  /**
    * findUserByUsername
    * Retrieves a user by their Username.
    * @param username The Username of the user to be retrieved.

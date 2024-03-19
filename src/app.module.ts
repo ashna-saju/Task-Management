@@ -22,7 +22,7 @@ import { TaskModule } from './task/task.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
     UserModule,
     TaskModule,

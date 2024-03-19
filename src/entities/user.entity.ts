@@ -31,5 +31,5 @@ export class Users {
    * A collection of tasks associated with this user
    */
   @OneToMany(() => Tasks, (task) => task.userId)
-  tasks: Tasks[];
+  task: Tasks[];
 }
