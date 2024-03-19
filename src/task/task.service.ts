@@ -7,9 +7,9 @@ import { AuthService } from '../auth/auth.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tasks } from '../entities/task.entity';
-import { Repository } from 'typeorm';
 import { TaskResponseDto } from './dto/task-response.dto';
 import { taskResponseMessages } from 'src/responseMessages/task-response-messages.config';
+import { Repository } from 'typeorm';
 @Injectable()
 export class TaskService {
   constructor(
@@ -30,10 +30,10 @@ export class TaskService {
     createTaskDto: CreateTaskDto,
   ): Promise<TaskResponseDto> {
     const decodedUser = await this.authService.decodeToken(token);
-    if (!decodedUser || !decodedUser.username) {
-      throw new UnauthorizedException('Invalid or missing token');
+    if (!decodedUser || !decodedUser.id) {
+      throw new UnauthorizedException(taskResponseMessages.INVALID_OR_MISSING_TOKEN_MESSAGE);
     }
-    const userId = decodedUser.userid;
+    const userId = decodedUser.id;
     createTaskDto.userId = userId;
     createTaskDto.title = createTaskDto.title.trim();
     createTaskDto.description = createTaskDto.description.trim();
@@ -45,7 +45,7 @@ export class TaskService {
       savedTask,
     );
   }
-
+  
   /**
    * Retrieves tasks by user ID.
    * @param {number} userId - The ID of the user.
@@ -76,10 +76,10 @@ export class TaskService {
   ): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findOne({ where: { id } });
     const decodedUser = await this.authService.decodeToken(token);
-    if (!decodedUser || !decodedUser.sub) {
-      throw new UnauthorizedException('Invalid or missing token');
+    if (!decodedUser || !decodedUser.id) {
+      throw new UnauthorizedException(taskResponseMessages.INVALID_OR_MISSING_TOKEN_MESSAGE);
     }
-    const userId = decodedUser.userid;
+    const userId = decodedUser.id;
     if (!task) {
       throw new NotFoundException(taskResponseMessages.TASK_NOT_FOUND);
     }
@@ -105,25 +105,25 @@ export class TaskService {
    * @throws {NotFoundException} Task not found.
    * @throws {UnauthorizedException} You are not authorized to delete this task.
    */
-
   async deleteTask(token: string, id: string): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findOne({ where: { id } });
     const decodedUser = await this.authService.decodeToken(token);
-    if (!decodedUser || !decodedUser.userid) {
-      throw new UnauthorizedException('Invalid token');
+    if (!decodedUser || !decodedUser.id) {
+      throw new UnauthorizedException(taskResponseMessages.INVALID_OR_MISSING_TOKEN_MESSAGE);
     }
     if (!task) {
       throw new NotFoundException(taskResponseMessages.TASK_NOT_FOUND);
     }
-    if (task.userId !== decodedUser.userid) {
+    if (task.userId !== decodedUser.id) {
       throw new UnauthorizedException(
         taskResponseMessages.UNAUTHORIZED_TASK_DELETION,
       );
     }
-    await this.taskRepository.remove(task);
+    const deletedTask=await this.taskRepository.remove(task);
     return new TaskResponseDto(
       true,
       taskResponseMessages.TASK_DELETED_SUCCESSFUL,
+      deletedTask
     );
   }
 }

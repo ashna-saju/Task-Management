@@ -17,4 +17,5 @@ export const taskResponseMessages = {
   NO_TASKS_FOUND: 'No tasks found for the user.',
   TASK_UPDATE_UNAUTHORIZED: 'You are not authorized to update this task.',
   TASK_UPDATED_SUCCESSFUL: 'Task updated successfully.',
+  INVALID_OR_MISSING_TOKEN_MESSAGE: 'Invalid or missing token',
 };

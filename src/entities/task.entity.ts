@@ -3,9 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Users } from '../entities/user.entity';
 
@@ -27,13 +27,13 @@ export class Tasks {
   dueDate: Date;
   @Column({ default: false, name: 'is_completed' })
   isCompleted: boolean;
-  @Column({ name: 'updated_by', nullable: true })
-  updatedBy: string;
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-  @ManyToOne(() => Users, (user) => user.tasks)
-  @JoinColumn({ name: 'created_by' })
+  @ManyToOne(() => Users, (user) => user.task)
+  @JoinColumn({ name: 'user_id' })
+  user: Users;
+  @Column({name: 'user_id'})
   userId: string;
 }

@@ -47,7 +47,6 @@ export class UserController {
   //2. System shall return the message
   //   success: true,
   //   message: 'User registration successful.'
-
   /**
    * Function create the user details
    * @body CreateUserDto
@@ -69,26 +68,7 @@ export class UserController {
     }
   }
 
-  //API URL: GET:/users/id/:id
-  //Retrieves a user by their id
-  // Protected by the AuthGuard, which ensures that only authenticated users can view the user details by id
-  //a. The function takes a parameter 'id' , which specifies the id of the user to be retrieved.
-  //b. Then it calls the function 'findUserById' to retrieve the user details from the database.
-  //c. If a user with the id is not found, then it throws a 'NotFoundException' with an error message 'User not found'.
-  //d. If a user is found, then it returns the id, name, username, email.
-  /**
-   * This function retrieves a user by their id.
-   * @param id The id of the user to be retrieved.
-   * @returns A promise resolving to returning the id, name, username, email if found.
-   * @throws NotFoundException if the user with the specified id is not found.
-   */
-  @UseGuards(AuthGuard)
-  @Get('id/:id')
-  async findUserById(@Param('id') id: string): Promise<Users> {
-    return this.userService.findUserById(id);
-  }
-
-  //API URL: GET:/users/username/:username
+  //API URL: GET:/users/:username
   //Retrieves a user by their username
   // Protected by the AuthGuard, which ensures that only authenticated users can view the user details by username
   //a. The function takes a parameter 'username' , which specifies the username of the user to be retrieved.
@@ -102,7 +82,7 @@ export class UserController {
    * @throws NotFoundException if the user with the specified username is not found.
    */
   @UseGuards(AuthGuard)
-  @Get('username/:username')
+  @Get(':username')
   async getUserByUsername(@Param('username') username: string): Promise<Users> {
     return this.userService.findUserByUsername(username);
   }
