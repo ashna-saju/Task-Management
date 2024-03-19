@@ -49,10 +49,10 @@ export class CreateUserDto {
   email: string;
 
   /**
- * The password of the user.
- * @IsNotEmpty The password is required.
- * @Matches /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/ The password must contain at least one number, one letter, one special character, and be at least 8 characters long.
- */
+   * The password of the user.
+   * @IsNotEmpty The password is required.
+   * @Matches /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/ The password must contain at least one number, one letter, one special character, and be at least 8 characters long.
+   */
   @Matches(/^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/, {
     message: userConfig.PASSWORD_REGEX_MESSAGE,
   })

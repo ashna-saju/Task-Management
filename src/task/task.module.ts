@@ -5,7 +5,6 @@ import { TaskService } from './task.service';
 import { TaskController } from './task.controller';
 import { Tasks } from '../entities/task.entity';
 import { UserModule } from 'src/user/user.module';
-import { TokenService } from '../userAuthentication/token.service';
 
 /**
  * Module for handling tasks.
@@ -14,7 +13,7 @@ import { TokenService } from '../userAuthentication/token.service';
  */
 @Module({
   imports: [TypeOrmModule.forFeature([Tasks]), AuthModule, UserModule],
-  providers: [TaskService, TokenService],
+  providers: [TaskService],
   controllers: [TaskController],
 })
 export class TaskModule {}

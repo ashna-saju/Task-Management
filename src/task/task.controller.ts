@@ -120,11 +120,11 @@ export class TaskController {
   //e. If the userId of the task to be deleted does not match with the userId decoded from the token, then it throws a 'UnauthorizedException' with an error message 'You are not authorized to delete this task'.
   //f. If a Task is deleted, then it returns the message 'Task deleted successfully'.
   /**
- * Deletes a task by its ID.
- * @param req - The request object.
- * @param id - The id of the task to delete.
- * @returns {Promise<void>} A Promise representing the completion of the task deletion.
- */
+   * Deletes a task by its ID.
+   * @param req - The request object.
+   * @param id - The id of the task to delete.
+   * @returns {Promise<void>} A Promise representing the completion of the task deletion.
+   */
   @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteTask(@Request() req, @Param('id') id: string) {

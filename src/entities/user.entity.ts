@@ -4,8 +4,8 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
-} from 'typeorm'
-import { Tasks } from '../entities/task.entity'
+} from 'typeorm';
+import { Tasks } from '../entities/task.entity';
 
 /**
  * Users
