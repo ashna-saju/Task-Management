@@ -22,7 +22,7 @@ enum Priority {
  */
 export class CreateTaskDto {
   id: string;
-  
+
   /**
    * The title of the task.
    * @minimumLength 5 - The title must contain at least 5 characters.

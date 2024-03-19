@@ -9,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Tasks } from '../entities/task.entity';
 import { Repository } from 'typeorm';
 import { TaskResponseDto } from './dto/task-response.dto';
-import { TokenService } from '../userAuthentication/token.service';
 import { taskResponseMessages } from 'src/responseMessages/task-response-messages.config';
 @Injectable()
 export class TaskService {
@@ -17,7 +16,6 @@ export class TaskService {
     @InjectRepository(Tasks)
     private taskRepository: Repository<Tasks>,
     private authService: AuthService,
-    private tokenService: TokenService,
   ) {}
 
   /**
@@ -36,7 +34,6 @@ export class TaskService {
       throw new UnauthorizedException('Invalid or missing token');
     }
     const userId = decodedUser.userid;
-    // const userId = await this.tokenService.getUserIdFromToken(token);
     createTaskDto.userId = userId;
     createTaskDto.title = createTaskDto.title.trim();
     createTaskDto.description = createTaskDto.description.trim();
@@ -78,7 +75,6 @@ export class TaskService {
     updateTaskDto: Partial<Tasks>,
   ): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findOne({ where: { id } });
-    // const userId = await this.tokenService.getUserIdFromToken(token);
     const decodedUser = await this.authService.decodeToken(token);
     if (!decodedUser || !decodedUser.sub) {
       throw new UnauthorizedException('Invalid or missing token');
@@ -112,7 +108,6 @@ export class TaskService {
 
   async deleteTask(token: string, id: string): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findOne({ where: { id } });
-    // const userId = await this.tokenService.getUserIdFromToken(token);
     const decodedUser = await this.authService.decodeToken(token);
     if (!decodedUser || !decodedUser.userid) {
       throw new UnauthorizedException('Invalid token');
