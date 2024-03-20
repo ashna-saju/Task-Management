@@ -87,4 +87,3 @@ export class UserController {
     return this.userService.findUserByUsername(username);
   }
 }
-

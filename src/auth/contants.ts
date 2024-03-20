@@ -4,4 +4,3 @@ export const jwtConstants = {
   // Secret key used for JWT token generation and validation.
   secret: process.env.JWT_SECRET,
 };
-

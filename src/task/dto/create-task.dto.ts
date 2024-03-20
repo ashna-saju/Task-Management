@@ -56,4 +56,3 @@ export class CreateTaskDto {
   @IsNotEmpty({ message: config.COMPLETION_STATUS_REQUIRED_MESSAGE })
   completed: boolean;
 }
-

@@ -37,4 +37,3 @@ export class Tasks {
   @Column()
   userId: string;
 }
-

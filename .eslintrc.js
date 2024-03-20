@@ -24,4 +24,3 @@ module.exports = {
     'prettier/prettier':0,
   },
 };
-

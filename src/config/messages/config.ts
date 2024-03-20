@@ -36,4 +36,3 @@ export const config = {
   TASK_UPDATED_SUCCESSFUL: 'Task updated successfully.',
   INVALID_OR_MISSING_TOKEN_MESSAGE: 'Invalid or missing token',
 };
-

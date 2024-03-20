@@ -22,4 +22,3 @@ export function decodePassword(
 ): boolean {
   return bcrypt.compareSync(rawPassword, hashedPassword);
 }
-
