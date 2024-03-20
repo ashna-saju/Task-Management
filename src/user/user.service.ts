@@ -8,14 +8,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { encodePassword } from 'src/utils/bcrypt.utils';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from '../entities/user.entity';
-import { userResponseMessages } from 'src/responseMessages/user-response-messages.config';
+import { config } from 'src/config/messages/config';
 @Injectable()
 export class UserService {
-  /**
-   * UserService
-   * This service class provides methods for user management, including user creation, retrieval, updation, deletion.
-   * It interacts with the UserRepository to perform CRUD operations on User entities.
-   */
   constructor(
     @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
@@ -39,15 +34,13 @@ export class UserService {
       where: { email: createUserDto.email },
     });
     if (existingUserEmail) {
-      throw new BadRequestException(userResponseMessages.EMAIL_ALREADY_EXISTS);
+      throw new BadRequestException(config.EMAIL_ALREADY_EXISTS);
     }
     const existingUsername = await this.userRepository.findOne({
       where: { username: createUserDto.username },
     });
     if (existingUsername) {
-      throw new BadRequestException(
-        userResponseMessages.USERNAME_ALREADY_EXISTS,
-      );
+      throw new BadRequestException(config.USERNAME_ALREADY_EXISTS);
     }
     createUserDto.name = createUserDto.name.trim();
     createUserDto.username = createUserDto.username.trim();
@@ -69,7 +62,7 @@ export class UserService {
       where: { username },
     });
     if (!user) {
-      throw new NotFoundException(userResponseMessages.USER_NOT_FOUND);
+      throw new NotFoundException(config.USER_NOT_FOUND);
     }
     return user;
   }

@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 import { Users } from '../entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { userResponseMessages } from 'src/responseMessages/user-response-messages.config';
+import { config } from 'src/config/messages/config';
 
 /**
  * UserController
@@ -61,7 +61,7 @@ export class UserController {
       await this.userService.createUser(createUserDto);
       return new UserResponseDto(
         true,
-        userResponseMessages.REGISTRATION_SUCCESSFUL,
+        config.REGISTRATION_SUCCESSFUL,
       );
     } catch (error) {
       throw new BadRequestException(error.message);

@@ -8,7 +8,6 @@ import { Users } from '../entities/user.entity';
   /**
    * UserModule
    * This module encapsulates functionality related to user management.
-   * It provides services for handling user-related operations and controllers for defining API endpoints.
    */
   imports: [TypeOrmModule.forFeature([Users])],
   providers: [UserService],
