@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
@@ -23,6 +24,7 @@ import { TaskModule } from './task/task.module';
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
+      namingStrategy: new SnakeNamingStrategy()
     }),
     UserModule,
     TaskModule,
@@ -30,3 +32,4 @@ import { TaskModule } from './task/task.module';
   ],
 })
 export class AppModule {}
+
