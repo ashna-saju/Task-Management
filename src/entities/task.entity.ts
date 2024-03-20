@@ -15,8 +15,8 @@ import { Users } from '../entities/user.entity';
  */
 @Entity()
 export class Tasks {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
   @Column()
   title: string;
   @Column()
@@ -34,6 +34,6 @@ export class Tasks {
   @ManyToOne(() => Users, (user) => user.task)
   @JoinColumn({ name: 'user_id' })
   user: Users;
-  @Column({name: 'user_id'})
+  @Column({ name: 'user_id' })
   userId: string;
 }

@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from '../auth/auth.guard';
-import { JwtService } from '@nestjs/jwt';
+
 describe('AuthController', () => {
   let controller: AuthController;
   beforeEach(async () => {

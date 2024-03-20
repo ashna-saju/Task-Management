@@ -103,7 +103,7 @@ export class TaskController {
   @Patch(':id')
   async updateTask(
     @Request() req,
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateTaskDto: Partial<Tasks>,
   ) {
     const token = req.headers.authorization.replace('Bearer ', '');
@@ -127,7 +127,7 @@ export class TaskController {
    */
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async deleteTask(@Request() req, @Param('id') id: string) {
+  async deleteTask(@Request() req, @Param('id') id: number) {
     const token = req.headers.authorization.replace('Bearer ', '');
     return this.taskService.deleteTask(token, id);
   }
