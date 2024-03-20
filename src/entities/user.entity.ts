@@ -17,13 +17,13 @@ export class Users {
   id: string;
   @Column()
   name: string;
-  @Column({ name: 'user_name' })
+  @Column()
   username: string;
   @Column()
   email: string;
   @Column()
   password: string;
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
 
   /**
@@ -33,3 +33,4 @@ export class Users {
   @OneToMany(() => Tasks, (task) => task.userId)
   task: Tasks[];
 }
+

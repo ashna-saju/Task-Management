@@ -23,17 +23,18 @@ export class Tasks {
   description: string;
   @Column()
   priority: string;
-  @Column({ type: 'timestamp', name: 'due_date' })
+  @Column({ type: 'timestamp' })
   dueDate: Date;
-  @Column({ default: false, name: 'is_completed' })
+  @Column({ default: false })
   isCompleted: boolean;
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt: Date;
   @ManyToOne(() => Users, (user) => user.task)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn()
   user: Users;
-  @Column({ name: 'user_id' })
+  @Column()
   userId: string;
 }
+
