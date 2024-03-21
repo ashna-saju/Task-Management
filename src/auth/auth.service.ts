@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { decodePassword } from 'src/utils/bcrypt.utils';
 import { UserService } from '../user/user.service';
+import { config } from 'src/config/messages/config';
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,7 +33,7 @@ export class AuthService {
       const access_token = await this.jwtService.signAsync(payload);
       return { access_token };
     } else {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(config.ERROR_INVALID_CREDENTIALS);
     }
   }
 
@@ -47,7 +48,7 @@ export class AuthService {
       const decoded = this.jwtService.decode(token);
       return decoded;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(config.ERROR_INVALID_TOKEN);
     }
   }
 }

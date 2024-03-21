@@ -80,7 +80,7 @@ export class TaskController {
   @Get()
   async getTasksByUserId(@Request() req) {
     const user = req.user;
-    return this.taskService.getTasksByUserId(user.userId);
+    return this.taskService.getTasksByUserId(user.id);
   }
 
   //API URL: UPDATE:/tasks/:id

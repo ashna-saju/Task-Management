@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { User } from 'src/user/user.decorator';
+import { Users } from 'src/entities/user.entity';
 
 /**
  * authController
@@ -45,7 +47,7 @@ export class AuthController {
    */
   @UseGuards(AuthGuard)
   @Get()
-  async getProfile(@Request() req) {
+  async getProfile(@User() user: Users,@Request() req) {
     const decodedToken = await this.authService.decodeToken(
       req.headers.authorization.split(' ')[1],
     );

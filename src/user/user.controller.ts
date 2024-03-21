@@ -4,8 +4,11 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
+  Request,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
@@ -13,6 +16,7 @@ import { Users } from '../entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { config } from 'src/config/messages/config';
+import { User } from './user.decorator';
 
 /**
  * UserController
@@ -59,10 +63,7 @@ export class UserController {
   ): Promise<UserResponseDto> {
     try {
       await this.userService.createUser(createUserDto);
-      return new UserResponseDto(
-        true,
-        config.REGISTRATION_SUCCESSFUL,
-      );
+      return new UserResponseDto(true, config.REGISTRATION_SUCCESSFUL);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -83,7 +84,86 @@ export class UserController {
    */
   @UseGuards(AuthGuard)
   @Get(':username')
-  async getUserByUsername(@Param('username') username: string): Promise<Users> {
+  async getUserByUsername(
+    @User() user: Users,
+    @Param('username') username: string,
+  ): Promise<Users> {
     return this.userService.findUserByUsername(username);
+  }
+
+  //API URL: GET:/users/id/:id
+  //Retrieves a user by their id
+  // Protected by the AuthGuard and user decorator, which ensures that only authenticated users can view the user details by id
+  //a. The function takes a parameter 'id' , which specifies the id of the user to be retrieved.
+  //b. Then it calls the function 'findUserById' to retrieve the user details from the database.
+  //c. If a user with the id is not found, then it throws a 'NotFoundException' with an error message 'User not found'.
+  //d. If a user is found, then it returns the id, name, username, email.
+  /**
+   * This function retrieves a user by their id.
+   * @param id The username of the user to be retrieved.
+   * @returns A promise resolving to returning the id, name, username, email if found.
+   * @throws NotFoundException if the user with the specified id is not found.
+   */
+  @UseGuards(AuthGuard)
+  @Get('id/:id')
+  async findUserById(
+    @User() user: Users,
+    @Param('id') id: string,
+  ): Promise<Users> {
+    return this.userService.findUserById(id);
+  }
+
+  // API URL: PATCH:/users
+  // Updates a user's profile information
+  // Protected by the AuthGuard and user decorator, which ensures that only authenticated users can update their profile
+  // a. The function takes parameters 'updateUserDto', 'req', 'id'.
+  // b. It calls the 'updateUser' function in the user service, passing the extracted token, id, and updated user details.
+  // d. The 'updateUser' function retrieves the user by id, updates their profile information with the provided DTO, and saves the changes to the database.
+  // e. Upon successful update, it returns a success response with the message 'User details updated successfully'.
+  /**
+   * Updates a user's profile information.
+   * @param user The authenticated user object.
+   * @body updateUserDto The DTO containing the updated user information.
+   * @param req The HTTP request object.
+   * @param id The id of the user to be updated.
+   * @returns A promise resolving to a UserResponseDto indicating the success of the update operation.
+   */
+  @UseGuards(AuthGuard)
+  @Patch()
+  async updateUser(
+    @User() user: Users,
+    @Body() updateUserDto: Partial<Users>,
+    @Request() req,
+    id: string,
+  ): Promise<UserResponseDto> {
+    id = req.user.id;
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return this.userService.updateUser(token, id, updateUserDto);
+  }
+
+  // API URL: DELETE:/users
+  // Deletes a user's account
+  // Protected by the AuthGuard and user decorator, which ensures that only authenticated users can delete their account
+  // a. The function takes parameters 'req', 'id'.
+  // b. It calls the 'deleteUser' function in the user service, passing the extracted token and id.
+  // c. The 'deleteUser' function in the service retrieves the user by id and removes their account from the database.
+  // d. Upon successful deletion, it returns a success response with the message 'User deleted successfully'.
+  /**
+   * Deletes a user's account.
+   * @param user The authenticated user object.
+   * @param req The HTTP request object.
+   * @param id The id of the user to be deleted.
+   * @returns A promise resolving to a UserResponseDto indicating the success of the delete operation.
+   */
+  @UseGuards(AuthGuard)
+  @Delete()
+  async deleteUser(
+    @User() user: Users,
+    @Request() req,
+    id: string,
+  ): Promise<UserResponseDto> {
+    id = req.user.id;
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return this.userService.deleteUser(token, id);
   }
 }

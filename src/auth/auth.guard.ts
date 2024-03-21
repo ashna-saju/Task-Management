@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './contants';
 import { Request } from 'express';
+import { config } from 'src/config/messages/config';
 
 /**
  * Guard to check the authentication of requests.
@@ -35,7 +36,7 @@ export class AuthGuard implements CanActivate {
         secret: jwtConstants.secret,
       });
       if (!payload || !payload.name || !payload.email) {
-        throw new UnauthorizedException('Invalid token payload');
+        throw new UnauthorizedException(config.ERROR_INVALID_TOKEN_PAYLOAD);
       }
       request['user'] = payload;
     } catch {

@@ -9,6 +9,7 @@ import { encodePassword } from 'src/utils/bcrypt.utils';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from '../entities/user.entity';
 import { config } from 'src/config/messages/config';
+import { UserResponseDto } from './dto/user-response.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -65,5 +66,55 @@ export class UserService {
       throw new NotFoundException(config.USER_NOT_FOUND);
     }
     return user;
+  }
+
+  /**
+   * findUserById
+   * Retrieves a user by their Id.
+   * @param id The id of the user to be retrieved.
+   * @returns A promise resolving to returning the id, name, username, email if found.
+   * @throws NotFoundException if the user with the specified id is not found.
+   */
+  async findUserById(id: string): Promise<Users> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'username', 'email', 'name'],
+    });
+    if (!user) {
+      throw new NotFoundException(config.USER_NOT_FOUND);
+    }
+    return user;
+  }
+
+  /**
+   * Updates a user's profile information.
+   * @param user The authenticated user object.
+   * @body updateUserDto The DTO containing the updated user information.
+   * @param req The HTTP request object.
+   * @param id The id of the user to be updated.
+   * @returns A promise resolving to a UserResponseDto indicating the success of the update operation.
+   */
+  async updateUser(
+    token: string,
+    id: string,
+    updateUserDto: Partial<CreateUserDto>,
+  ): Promise<UserResponseDto> {
+    const user = await this.findUserById(id);
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+    return new UserResponseDto(true, config.DETAILS_UPDATED_SUCCESSFUL);
+  }
+
+  /**
+   * Deletes a user's account.
+   * @param user The authenticated user object.
+   * @param req The HTTP request object.
+   * @param id The id of the user to be deleted.
+   * @returns A promise resolving to a UserResponseDto indicating the success of the delete operation.
+   */
+  async deleteUser(token: string, id: string): Promise<UserResponseDto> {
+    const user = await this.findUserById(id);
+    await this.userRepository.remove(user);
+    return new UserResponseDto(true, config.USER_DELETED_SUCCESSFUL);
   }
 }
