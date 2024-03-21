@@ -2,10 +2,13 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
@@ -13,6 +16,7 @@ import { Users } from '../entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { config } from 'src/config/messages/config';
+import { User } from './user.decorator';
 
 /**
  * UserController
@@ -55,14 +59,12 @@ export class UserController {
    */
   @Post()
   async createUser(
+    @User() user: Users,
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
     try {
       await this.userService.createUser(createUserDto);
-      return new UserResponseDto(
-        true,
-        config.REGISTRATION_SUCCESSFUL,
-      );
+      return new UserResponseDto(true, config.REGISTRATION_SUCCESSFUL);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -83,7 +85,54 @@ export class UserController {
    */
   @UseGuards(AuthGuard)
   @Get(':username')
-  async getUserByUsername(@Param('username') username: string): Promise<Users> {
+  async getUserByUsername(
+    @User() user: Users,
+    @Param('username') username: string,
+  ): Promise<Users> {
     return this.userService.findUserByUsername(username);
+  }
+  @UseGuards(AuthGuard)
+  @Get('id/:id')
+  async findUserById(@User() user: Users,@Param('id') id: string): Promise<Users> {
+    return this.userService.findUserById(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch()
+  async updateUser(
+    @User() user: Users,
+    @Body() updateUserDto: Partial<Users>,
+    @Request() req,
+    id:string // Import Request from '@nestjs/common' or 'express'
+  ): Promise<UserResponseDto> {
+    // try {
+      id = req.user.id; // Access userId from req.user
+    //   await this.userService.updateUser(userId, updateUserDto);
+    //   return {
+    //     success: true,
+    //     message: config.DETAILS_UPDATED_SUCCESSFUL,
+    //   };
+    // } catch (error) {
+    //   throw new BadRequestException(error.message);
+    // }
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return this.userService.updateUser( token,id, updateUserDto);
+  }
+  
+  @UseGuards(AuthGuard)
+  @Delete()
+  async deleteUser(@User() user: Users,@Request() req, id: string): Promise<UserResponseDto> {
+    // try {
+      id = req.user.id;
+    //   await this.userService.deleteUser(userId);
+    //   return {
+    //     success: true,
+    //     message: config.USER_DELETED_SUCCESSFUL,
+    //   };
+    // } catch (error) {
+    //   throw new BadRequestException(error.message);
+    // }
+    const token = req.headers.authorization.replace('Bearer ', '');
+    return this.userService.deleteUser(token, id);
   }
 }

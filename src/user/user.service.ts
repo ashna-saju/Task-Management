@@ -9,6 +9,7 @@ import { encodePassword } from 'src/utils/bcrypt.utils';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from '../entities/user.entity';
 import { config } from 'src/config/messages/config';
+import { UserResponseDto } from './dto/user-response.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -30,23 +31,29 @@ export class UserService {
    * 6. Saves the new user entity to the database.
    */
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    const existingUserEmail = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
+    // Check if the email and username already exist
+    const existingUserEmail = await this.userRepository.findOne({ where: { email: createUserDto.email } });
     if (existingUserEmail) {
       throw new BadRequestException(config.EMAIL_ALREADY_EXISTS);
     }
-    const existingUsername = await this.userRepository.findOne({
-      where: { username: createUserDto.username },
-    });
+    const existingUsername = await this.userRepository.findOne({ where: { username: createUserDto.username } });
     if (existingUsername) {
       throw new BadRequestException(config.USERNAME_ALREADY_EXISTS);
     }
+    
+    // Trim and lowercase the fields
     createUserDto.name = createUserDto.name.trim();
     createUserDto.username = createUserDto.username.trim();
     createUserDto.email = createUserDto.email.trim().toLowerCase();
-    const password = encodePassword(createUserDto.password);
-    const newUser = this.userRepository.create({ ...createUserDto, password });
+    
+    // Hash the password
+    const hashedPassword = encodePassword(createUserDto.password);
+    
+    // Create a new user entity with the hashed password
+    const newUser = this.userRepository.create({ ...createUserDto, password: hashedPassword });
+    // const newUser = this.userRepository.create({ ...createUserDto });
+    
+    // Save the new user entity to the database
     await this.userRepository.save(newUser);
   }
 
@@ -60,10 +67,40 @@ export class UserService {
   async findUserByUsername(username: string): Promise<Users> {
     const user = await this.userRepository.findOne({
       where: { username },
+      // select: ['id', 'username', 'email', 'name'],
     });
     if (!user) {
       throw new NotFoundException(config.USER_NOT_FOUND);
     }
     return user;
   }
+  async findUserById(id: string): Promise<Users> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['id', 'username', 'email', 'name'],
+    });
+    if (!user) {
+      throw new NotFoundException(config.USER_NOT_FOUND);
+    }
+    return user;
+  }
+  async updateUser(
+    token:string,
+    id: string,
+    updateUserDto: Partial<CreateUserDto>,
+  ): Promise<UserResponseDto> {
+    const user = await this.findUserById(id);
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+    return new UserResponseDto(true, config.DETAILS_UPDATED_SUCCESSFUL);
+  }
+
+  async deleteUser(token:string,id: string): Promise<UserResponseDto> {
+    const user = await this.findUserById(id);
+    await this.userRepository.remove(user);
+    return new UserResponseDto(true, config.USER_DELETED_SUCCESSFUL);
+  }
 }
+
+
+
