@@ -6,9 +6,11 @@ import * as bcrypt from 'bcrypt';
  * @returns The hashed password string.
  */
 export function encodePassword(rawPassword: string) {
-  const SALT = bcrypt.genSaltSync();
-  return bcrypt.hashSync(rawPassword, SALT);
+  const SALT_ROUNDS = 10; // Specify the number of salt rounds
+  const salt = bcrypt.genSaltSync(SALT_ROUNDS);
+  return bcrypt.hashSync(rawPassword, salt);
 }
+
 
 /**
  * Compare a raw password with a hashed password securely using bcrypt.
@@ -20,5 +22,11 @@ export function decodePassword(
   rawPassword: string,
   hashedPassword: string,
 ): boolean {
+  if (!rawPassword || !hashedPassword) {
+    return false; // Handle empty or null passwords
+  }
+  console.log(rawPassword)
+  console.log(hashedPassword)
+  console.log(bcrypt.compareSync(rawPassword, hashedPassword))
   return bcrypt.compareSync(rawPassword, hashedPassword);
 }
