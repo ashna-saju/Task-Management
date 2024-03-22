@@ -32,4 +32,3 @@ import { TaskModule } from './task/task.module';
   ],
 })
 export class AppModule {}
-

@@ -28,4 +28,3 @@ import { UserService } from 'src/user/user.service';
   exports: [AuthService],
 })
 export class AuthModule {}
-

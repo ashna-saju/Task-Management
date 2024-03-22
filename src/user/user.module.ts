@@ -14,4 +14,3 @@ import { Users } from '../entities/user.entity';
   controllers: [UserController],
 })
 export class UserModule {}
-

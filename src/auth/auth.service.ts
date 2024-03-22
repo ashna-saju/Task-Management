@@ -22,6 +22,10 @@ export class AuthService {
     password: string,
   ): Promise<{ access_token: string }> {
     const user = await this.usersService.findUserByUsername(username);
+    console.log(user)
+    console.log("password",password)
+    console.log("user password",user.password)
+    console.log(decodePassword(password, user.password))
     if (user && decodePassword(password, user.password) === true) {
       const payload = {
         id: user.id,
@@ -51,4 +55,3 @@ export class AuthService {
     }
   }
 }
-

@@ -33,4 +33,3 @@ export class Users {
   @OneToMany(() => Tasks, (task) => task.userId)
   task: Tasks[];
 }
-
