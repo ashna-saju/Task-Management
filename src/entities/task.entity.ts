@@ -5,9 +5,9 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
-} from 'typeorm';
-import { Users } from '../entities/user.entity';
+  JoinColumn
+} from 'typeorm'
+import { Users } from '../entities/user.entity'
 
 /**
  * Tasks
@@ -16,11 +16,11 @@ import { Users } from '../entities/user.entity';
 @Entity()
 export class Tasks {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
   @Column()
-  title: string;
+  title: string
   @Column()
-  description: string;
+  description: string
   @Column()
   priority: string;
   @Column({ type: 'timestamp' })

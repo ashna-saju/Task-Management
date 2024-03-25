@@ -43,8 +43,8 @@ export class TaskService {
   }
 
   /**
-   * Retrieves tasks by user ID.
-   * @param {number} userId - The ID of the user.
+   * Retrieves tasks by user id.
+   * @param {number} userId - The id of the user.
    * @returns {Promise<Task[]>} Array of tasks belonging to the user.
    * @throws {NotFoundException} Task not found.
    */

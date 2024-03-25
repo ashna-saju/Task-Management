@@ -6,15 +6,16 @@ import {
   HttpStatus,
   Post,
   Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
-import { AuthService } from './auth.service';
-import { User } from 'src/user/user.decorator';
-import { Users } from 'src/entities/user.entity';
+  UseGuards
+} from '@nestjs/common'
+import { AuthGuard } from './auth.guard'
+import { AuthService } from './auth.service'
+import { SignInDto } from './dto/signIn.dto'
+import { User } from '../user/user.decorator'
+import { Users } from '../entities/user.entity'
 
 /**
- * authController
+ * AuthController
  * This controller handles HTTP requests related to authorization, which includes:
    - login.
    - view profile.
@@ -35,8 +36,9 @@ export class AuthController {
    */
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: { username: string; password: string }) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  async signIn(@Body() signInDto: SignInDto) {
+    const { username, password } = signInDto
+    return this.authService.signIn(username, password)
   }
 
   //API URL: GET:/auth
@@ -47,11 +49,11 @@ export class AuthController {
    */
   @UseGuards(AuthGuard)
   @Get()
-  async getProfile(@User() user: Users,@Request() req) {
+  async getProfile(@User() user: Users, @Request() req) {
     const decodedToken = await this.authService.decodeToken(
-      req.headers.authorization.split(' ')[1],
-    );
-    const { id, username, name, email } = decodedToken;
-    return { id, username, name, email };
+      req.headers.authorization.split(' ')[1]
+    )
+    const { id, username, name, email } = decodedToken
+    return { id, username, name, email }
   }
 }

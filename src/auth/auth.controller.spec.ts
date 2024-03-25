@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
-import { AuthController } from './auth.controller';
-import { AuthGuard } from '../auth/auth.guard';
+import { Test, TestingModule } from '@nestjs/testing'
+import { JwtService } from '@nestjs/jwt'
+import { AuthController } from './auth.controller'
+import { AuthGuard } from '../auth/auth.guard'
 
 describe('AuthController', () => {
-  let controller: AuthController;
+  let controller: AuthController
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -13,14 +13,14 @@ describe('AuthController', () => {
         {
           provide: AuthGuard,
           useValue: {
-            canActivate: jest.fn().mockReturnValue(true),
-          },
-        },
-      ],
-    }).compile();
-    controller = module.get<AuthController>(AuthController);
-  });
+            canActivate: jest.fn().mockReturnValue(true)
+          }
+        }
+      ]
+    }).compile()
+    controller = module.get<AuthController>(AuthController)
+  })
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+    expect(controller).toBeDefined()
+  })
+})

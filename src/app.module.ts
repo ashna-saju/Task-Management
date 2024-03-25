@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { TaskModule } from './task/task.module';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AuthModule } from './auth/auth.module'
+import { UserModule } from './user/user.module'
+import { TaskModule } from './task/task.module'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+
 @Module({
   /**
    * AppModule
@@ -28,7 +29,7 @@ import { TaskModule } from './task/task.module';
     }),
     UserModule,
     TaskModule,
-    AuthModule,
-  ],
+    AuthModule
+  ]
 })
 export class AppModule {}
