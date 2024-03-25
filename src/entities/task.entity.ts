@@ -28,12 +28,12 @@ export class Tasks {
   @Column({ default: false })
   isCompleted: boolean;
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
   @ManyToOne(() => Users, (user) => user.task)
   @JoinColumn()
-  user: Users;
+  user: Users
   @Column()
-  userId: string;
+  userId: string
 }

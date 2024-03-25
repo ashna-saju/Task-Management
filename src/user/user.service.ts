@@ -31,29 +31,26 @@ export class UserService {
    * 6. Saves the new user entity to the database.
    */
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    // Check if the email and username already exist
-    const existingUserEmail = await this.userRepository.findOne({ where: { email: createUserDto.email } });
+    const existingUserEmail = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
     if (existingUserEmail) {
       throw new BadRequestException(config.EMAIL_ALREADY_EXISTS);
     }
-    const existingUsername = await this.userRepository.findOne({ where: { username: createUserDto.username } });
+    const existingUsername = await this.userRepository.findOne({
+      where: { username: createUserDto.username },
+    });
     if (existingUsername) {
       throw new BadRequestException(config.USERNAME_ALREADY_EXISTS);
     }
-    
-    // Trim and lowercase the fields
     createUserDto.name = createUserDto.name.trim();
     createUserDto.username = createUserDto.username.trim();
     createUserDto.email = createUserDto.email.trim().toLowerCase();
-    
-    // Hash the password
     const hashedPassword = encodePassword(createUserDto.password);
-    
-    // Create a new user entity with the hashed password
-    const newUser = this.userRepository.create({ ...createUserDto, password: hashedPassword });
-    // const newUser = this.userRepository.create({ ...createUserDto });
-    
-    // Save the new user entity to the database
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
     await this.userRepository.save(newUser);
   }
 
@@ -74,7 +71,6 @@ export class UserService {
     }
     return user;
   }
-
 
   /**
    * findUserById
@@ -113,7 +109,6 @@ export class UserService {
     return new UserResponseDto(true, config.DETAILS_UPDATED_SUCCESSFUL);
   }
 
-
   /**
    * Deletes a user's account.
    * @param user The authenticated user object.
@@ -127,6 +122,3 @@ export class UserService {
     return new UserResponseDto(true, config.USER_DELETED_SUCCESSFUL);
   }
 }
-
-
-

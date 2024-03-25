@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs'
 
 /**
  * Encode a raw password securely using bcrypt.
@@ -6,9 +6,9 @@ import * as bcrypt from 'bcryptjs';
  * @returns The hashed password string.
  */
 export function encodePassword(rawPassword: string) {
-  const SALT_ROUNDS = 10;
-  const SALT = bcrypt.genSaltSync(SALT_ROUNDS);
-  return bcrypt.hashSync(rawPassword, SALT);
+  const SALT_ROUNDS = 10
+  const SALT = bcrypt.genSaltSync(SALT_ROUNDS)
+  return bcrypt.hashSync(rawPassword, SALT)
 }
 
 /**
@@ -19,10 +19,10 @@ export function encodePassword(rawPassword: string) {
  */
 export function decodePassword(
   rawPassword: string,
-  hashedPassword: string,
+  hashedPassword: string
 ): boolean {
   if (!rawPassword || !hashedPassword) {
-    return false;
+    return false
   }
-  return bcrypt.compareSync(rawPassword, hashedPassword);
+  return bcrypt.compareSync(rawPassword, hashedPassword)
 }
