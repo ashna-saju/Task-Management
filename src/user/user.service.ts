@@ -74,7 +74,7 @@ export class UserService {
     }
     return user;
   }
-<<<<<<< HEAD
+
 
   /**
    * findUserById
@@ -83,8 +83,6 @@ export class UserService {
    * @returns A promise resolving to returning the id, name, username, email if found.
    * @throws NotFoundException if the user with the specified id is not found.
    */
-=======
->>>>>>> 95154a3034fbc290b89c0b04fad7cc87be5e3e6d
   async findUserById(id: string): Promise<Users> {
     const user = await this.userRepository.findOne({
       where: { id },
@@ -95,7 +93,6 @@ export class UserService {
     }
     return user;
   }
-<<<<<<< HEAD
 
   /**
    * Updates a user's profile information.
@@ -107,10 +104,6 @@ export class UserService {
    */
   async updateUser(
     token: string,
-=======
-  async updateUser(
-    token:string,
->>>>>>> 95154a3034fbc290b89c0b04fad7cc87be5e3e6d
     id: string,
     updateUserDto: Partial<CreateUserDto>,
   ): Promise<UserResponseDto> {
@@ -120,7 +113,7 @@ export class UserService {
     return new UserResponseDto(true, config.DETAILS_UPDATED_SUCCESSFUL);
   }
 
-<<<<<<< HEAD
+
   /**
    * Deletes a user's account.
    * @param user The authenticated user object.
@@ -129,9 +122,6 @@ export class UserService {
    * @returns A promise resolving to a UserResponseDto indicating the success of the delete operation.
    */
   async deleteUser(token: string, id: string): Promise<UserResponseDto> {
-=======
-  async deleteUser(token:string,id: string): Promise<UserResponseDto> {
->>>>>>> 95154a3034fbc290b89c0b04fad7cc87be5e3e6d
     const user = await this.findUserById(id);
     await this.userRepository.remove(user);
     return new UserResponseDto(true, config.USER_DELETED_SUCCESSFUL);
