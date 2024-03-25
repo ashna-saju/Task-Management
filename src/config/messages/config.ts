@@ -37,5 +37,5 @@ export const config = {
   INVALID_OR_MISSING_TOKEN_MESSAGE: 'Invalid or missing token',
   ERROR_INVALID_TOKEN: 'Invalid token',
   ERROR_INVALID_CREDENTIALS: 'Invalid credentials',
-  ERROR_INVALID_TOKEN_PAYLOAD: 'Invalid token payload',
-};
+  ERROR_INVALID_TOKEN_PAYLOAD: 'Invalid token payload'
+}

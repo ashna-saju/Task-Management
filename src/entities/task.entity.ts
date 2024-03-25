@@ -5,9 +5,9 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
-} from 'typeorm';
-import { Users } from '../entities/user.entity';
+  JoinColumn
+} from 'typeorm'
+import { Users } from '../entities/user.entity'
 
 /**
  * Tasks
@@ -16,24 +16,24 @@ import { Users } from '../entities/user.entity';
 @Entity()
 export class Tasks {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
   @Column()
-  title: string;
+  title: string
   @Column()
-  description: string;
+  description: string
   @Column()
-  priority: string;
+  priority: string
   @Column({ type: 'timestamp', name: 'due_date' })
-  dueDate: Date;
+  dueDate: Date
   @Column({ default: false, name: 'is_completed' })
-  isCompleted: boolean;
+  isCompleted: boolean
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt: Date
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date
   @ManyToOne(() => Users, (user) => user.task)
   @JoinColumn({ name: 'user_id' })
-  user: Users;
+  user: Users
   @Column({ name: 'user_id' })
-  userId: string;
+  userId: string
 }
