@@ -3,9 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
-  CreateDateColumn,
-} from 'typeorm';
-import { Tasks } from '../entities/task.entity';
+  CreateDateColumn
+} from 'typeorm'
+import { Tasks } from '../entities/task.entity'
 
 /**
  * Users
@@ -14,22 +14,22 @@ import { Tasks } from '../entities/task.entity';
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
   @Column()
-  name: string;
+  name: string
   @Column()
-  username: string;
+  username: string
   @Column()
-  email: string;
+  email: string
   @Column()
-  password: string;
+  password: string
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   /**
    * tasks
    * A collection of tasks associated with this user
    */
   @OneToMany(() => Tasks, (task) => task.userId)
-  task: Tasks[];
+  task: Tasks[]
 }

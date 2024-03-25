@@ -7,12 +7,12 @@ import {
   Patch,
   Post,
   Request,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '../auth/auth.guard';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { Tasks } from '../entities/task.entity';
-import { TaskService } from './task.service';
+  UseGuards
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
+import { CreateTaskDto } from './dto/create-task.dto'
+import { Tasks } from '../entities/task.entity'
+import { TaskService } from './task.service'
 
 /**
  * taskController
@@ -60,8 +60,8 @@ export class TaskController {
   @UseGuards(AuthGuard)
   @Post()
   async createTask(@Request() req, @Body() createTaskDto: CreateTaskDto) {
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.taskService.createTask(token, createTaskDto);
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.taskService.createTask(token, createTaskDto)
   }
 
   //API URL: GET:/tasks
@@ -79,8 +79,8 @@ export class TaskController {
   @UseGuards(AuthGuard)
   @Get()
   async getTasksByUserId(@Request() req) {
-    const user = req.user;
-    return this.taskService.getTasksByUserId(user.id);
+    const user = req.user
+    return this.taskService.getTasksByUserId(user.id)
   }
 
   //API URL: UPDATE:/tasks/:id
@@ -104,10 +104,10 @@ export class TaskController {
   async updateTask(
     @Request() req,
     @Param('id') id: number,
-    @Body() updateTaskDto: Partial<Tasks>,
+    @Body() updateTaskDto: Partial<Tasks>
   ) {
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.taskService.updateTask(token, id, updateTaskDto);
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.taskService.updateTask(token, id, updateTaskDto)
   }
 
   //API URL: DELETE:/tasks/:id
@@ -128,7 +128,7 @@ export class TaskController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteTask(@Request() req, @Param('id') id: number) {
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.taskService.deleteTask(token, id);
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.taskService.deleteTask(token, id)
   }
 }

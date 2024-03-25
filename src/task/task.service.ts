@@ -1,21 +1,21 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Tasks } from '../entities/task.entity';
-import { TaskResponseDto } from './dto/task-response.dto';
-import { Repository } from 'typeorm';
-import { config } from 'src/config/messages/config';
+  UnauthorizedException
+} from '@nestjs/common'
+import { AuthService } from '../auth/auth.service'
+import { CreateTaskDto } from './dto/create-task.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Tasks } from '../entities/task.entity'
+import { TaskResponseDto } from './dto/task-response.dto'
+import { Repository } from 'typeorm'
+import { config } from 'src/config/messages/config'
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Tasks)
     private taskRepository: Repository<Tasks>,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   /**
@@ -27,19 +27,19 @@ export class TaskService {
    */
   async createTask(
     token: string,
-    createTaskDto: CreateTaskDto,
+    createTaskDto: CreateTaskDto
   ): Promise<TaskResponseDto> {
-    const decodedUser = await this.authService.decodeToken(token);
+    const decodedUser = await this.authService.decodeToken(token)
     if (!decodedUser || !decodedUser.id) {
-      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE);
+      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE)
     }
-    const userId = decodedUser.id;
-    createTaskDto.userId = userId;
-    createTaskDto.title = createTaskDto.title.trim();
-    createTaskDto.description = createTaskDto.description.trim();
-    const newTask = this.taskRepository.create({ ...createTaskDto });
-    await this.taskRepository.save(newTask);
-    return new TaskResponseDto(true, config.TASK_CREATED_SUCCESSFUL);
+    const userId = decodedUser.id
+    createTaskDto.userId = userId
+    createTaskDto.title = createTaskDto.title.trim()
+    createTaskDto.description = createTaskDto.description.trim()
+    const newTask = this.taskRepository.create({ ...createTaskDto })
+    await this.taskRepository.save(newTask)
+    return new TaskResponseDto(true, config.TASK_CREATED_SUCCESSFUL)
   }
 
   /**
@@ -49,11 +49,11 @@ export class TaskService {
    * @throws {NotFoundException} Task not found.
    */
   async getTasksByUserId(userId: string): Promise<Tasks[]> {
-    const tasks = await this.taskRepository.find({ where: { userId } });
+    const tasks = await this.taskRepository.find({ where: { userId } })
     if (!tasks || tasks.length === 0) {
-      throw new NotFoundException(config.NO_TASKS_FOUND);
+      throw new NotFoundException(config.NO_TASKS_FOUND)
     }
-    return tasks;
+    return tasks
   }
 
   /**
@@ -68,23 +68,23 @@ export class TaskService {
   async updateTask(
     token: string,
     id: number,
-    updateTaskDto: Partial<Tasks>,
+    updateTaskDto: Partial<Tasks>
   ): Promise<TaskResponseDto> {
-    const task = await this.taskRepository.findOne({ where: { id } });
-    const decodedUser = await this.authService.decodeToken(token);
+    const task = await this.taskRepository.findOne({ where: { id } })
+    const decodedUser = await this.authService.decodeToken(token)
     if (!decodedUser || !decodedUser.id) {
-      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE);
+      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE)
     }
-    const userId = decodedUser.id;
+    const userId = decodedUser.id
     if (!task) {
-      throw new NotFoundException(config.TASK_NOT_FOUND);
+      throw new NotFoundException(config.TASK_NOT_FOUND)
     }
     if (task.userId !== userId) {
-      throw new UnauthorizedException(config.TASK_UPDATE_UNAUTHORIZED);
+      throw new UnauthorizedException(config.TASK_UPDATE_UNAUTHORIZED)
     }
-    Object.assign(task, updateTaskDto);
-    await this.taskRepository.save(task);
-    return new TaskResponseDto(true, config.TASK_UPDATED_SUCCESSFUL);
+    Object.assign(task, updateTaskDto)
+    await this.taskRepository.save(task)
+    return new TaskResponseDto(true, config.TASK_UPDATED_SUCCESSFUL)
   }
 
   /**
@@ -96,18 +96,18 @@ export class TaskService {
    * @throws {UnauthorizedException} You are not authorized to delete this task.
    */
   async deleteTask(token: string, id: number): Promise<TaskResponseDto> {
-    const task = await this.taskRepository.findOne({ where: { id } });
-    const decodedUser = await this.authService.decodeToken(token);
+    const task = await this.taskRepository.findOne({ where: { id } })
+    const decodedUser = await this.authService.decodeToken(token)
     if (!decodedUser || !decodedUser.id) {
-      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE);
+      throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE)
     }
     if (!task) {
-      throw new NotFoundException(config.TASK_NOT_FOUND);
+      throw new NotFoundException(config.TASK_NOT_FOUND)
     }
     if (task.userId !== decodedUser.id) {
-      throw new UnauthorizedException(config.UNAUTHORIZED_TASK_DELETION);
+      throw new UnauthorizedException(config.UNAUTHORIZED_TASK_DELETION)
     }
-    await this.taskRepository.remove(task);
-    return new TaskResponseDto(true, config.TASK_DELETED_SUCCESSFUL);
+    await this.taskRepository.remove(task)
+    return new TaskResponseDto(true, config.TASK_DELETED_SUCCESSFUL)
   }
 }
