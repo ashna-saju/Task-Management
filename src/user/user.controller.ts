@@ -8,15 +8,15 @@ import {
   Patch,
   Post,
   UseGuards,
-  Request,
-} from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { UserService } from './user.service';
-import { Users } from '../entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
-import { config } from 'src/config/messages/config';
-import { User } from './user.decorator';
+  Request
+} from '@nestjs/common'
+import { AuthGuard } from '../auth/auth.guard'
+import { UserService } from './user.service'
+import { Users } from '../entities/user.entity'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UserResponseDto } from './dto/user-response.dto'
+import { config } from '../config/messages/config'
+import { User } from './user.decorator'
 
 /**
  * UserController
@@ -60,13 +60,13 @@ export class UserController {
   @Post()
   async createUser(
     @User() user: Users,
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto
   ): Promise<UserResponseDto> {
     try {
-      await this.userService.createUser(createUserDto);
-      return new UserResponseDto(true, config.REGISTRATION_SUCCESSFUL);
+      await this.userService.createUser(createUserDto)
+      return new UserResponseDto(true, config.REGISTRATION_SUCCESSFUL)
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error.message)
     }
   }
 
@@ -87,9 +87,9 @@ export class UserController {
   @Get(':username')
   async getUserByUsername(
     @User() user: Users,
-    @Param('username') username: string,
+    @Param('username') username: string
   ): Promise<Users> {
-    return this.userService.findUserByUsername(username);
+    return this.userService.findUserByUsername(username)
   }
 
   //API URL: GET:/users/id/:id
@@ -109,9 +109,9 @@ export class UserController {
   @Get('id/:id')
   async findUserById(
     @User() user: Users,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<Users> {
-    return this.userService.findUserById(id);
+    return this.userService.findUserById(id)
   }
 
   // API URL: PATCH:/users
@@ -135,11 +135,11 @@ export class UserController {
     @User() user: Users,
     @Body() updateUserDto: Partial<Users>,
     @Request() req,
-    id: string,
+    id: string
   ): Promise<UserResponseDto> {
-    id = req.user.id;
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.userService.updateUser(token, id, updateUserDto);
+    id = req.user.id
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.userService.updateUser(token, id, updateUserDto)
   }
 
   // API URL: DELETE:/users
@@ -161,10 +161,10 @@ export class UserController {
   async deleteUser(
     @User() user: Users,
     @Request() req,
-    id: string,
+    id: string
   ): Promise<UserResponseDto> {
-    id = req.user.id;
-    const token = req.headers.authorization.replace('Bearer ', '');
-    return this.userService.deleteUser(token, id);
+    id = req.user.id
+    const token = req.headers.authorization.replace('Bearer ', '')
+    return this.userService.deleteUser(token, id)
   }
 }
