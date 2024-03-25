@@ -35,4 +35,7 @@ export const config = {
   TASK_UPDATE_UNAUTHORIZED: 'You are not authorized to update this task.',
   TASK_UPDATED_SUCCESSFUL: 'Task updated successfully.',
   INVALID_OR_MISSING_TOKEN_MESSAGE: 'Invalid or missing token',
-};
+  ERROR_INVALID_TOKEN: 'Invalid token',
+  ERROR_INVALID_CREDENTIALS: 'Invalid credentials',
+  ERROR_INVALID_TOKEN_PAYLOAD: 'Invalid token payload'
+}

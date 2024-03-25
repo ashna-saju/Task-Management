@@ -1,12 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { decodePassword } from 'src/utils/bcrypt.utils';
-import { UserService } from '../user/user.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { decodePassword } from '../utils/bcrypt.utils'
+import { UserService } from '../user/user.service'
+import { config } from '../config/messages/config'
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   /**
@@ -19,24 +20,20 @@ export class AuthService {
    */
   async signIn(
     username: string,
-    password: string,
+    password: string
   ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findUserByUsername(username);
-    console.log(user)
-    console.log("password",password)
-    console.log("user password",user.password)
-    console.log(decodePassword(password, user.password))
+    const user = await this.usersService.findUserByUsername(username)
     if (user && decodePassword(password, user.password) === true) {
       const payload = {
         id: user.id,
         name: user.name,
         username: user.username,
-        email: user.email,
-      };
-      const access_token = await this.jwtService.signAsync(payload);
-      return { access_token };
+        email: user.email
+      }
+      const access_token = await this.jwtService.signAsync(payload)
+      return { access_token }
     } else {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(config.ERROR_INVALID_CREDENTIALS)
     }
   }
 
@@ -48,10 +45,10 @@ export class AuthService {
    */
   async decodeToken(token: string): Promise<any> {
     try {
-      const decoded = this.jwtService.decode(token);
-      return decoded;
+      const decoded = this.jwtService.decode(token)
+      return decoded
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(config.ERROR_INVALID_TOKEN)
     }
   }
 }
