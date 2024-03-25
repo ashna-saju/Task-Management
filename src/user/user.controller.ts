@@ -2,13 +2,13 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
   UseGuards,
   Request,
-  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserService } from './user.service';
@@ -59,6 +59,7 @@ export class UserController {
    */
   @Post()
   async createUser(
+    @User() user: Users,
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
     try {

@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
 import { TaskModule } from './task/task.module'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+
 @Module({
   /**
    * AppModule
@@ -22,7 +24,8 @@ import { TaskModule } from './task/task.module'
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
-      synchronize: false
+      synchronize: true,
+      namingStrategy: new SnakeNamingStrategy()
     }),
     UserModule,
     TaskModule,

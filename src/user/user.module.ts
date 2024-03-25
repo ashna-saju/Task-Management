@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { Users } from '../entities/user.entity';
 @Module({
-  
+
   /**
    * UserModule
    * This module encapsulates functionality related to user management.
