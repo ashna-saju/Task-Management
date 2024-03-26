@@ -7,14 +7,14 @@ import {
   UpdateDateColumn,
   JoinColumn
 } from 'typeorm'
-import { Users } from '../entities/user.entity'
+import { User } from '../entities/user.entity'
 
 /**
  * Tasks
  * Entity representing a task.
  */
 @Entity()
-export class Tasks {
+export class Task {
   @PrimaryGeneratedColumn()
   id: number
   @Column()
@@ -31,9 +31,9 @@ export class Tasks {
   createdAt: Date
   @UpdateDateColumn()
   updatedAt: Date
-  @ManyToOne(() => Users, (user) => user.task)
+  @ManyToOne(() => User, (user) => user.task)
   @JoinColumn()
-  user: Users
+  user: User
   @Column()
   userId: string
 }

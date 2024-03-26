@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { encodePassword } from 'src/utils/bcrypt.utils';
+import { encodePassword } from '../utils/bcrypt.utils';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Users } from '../entities/user.entity';
-import { config } from 'src/config/messages/config';
+import { User } from '../entities/user.entity';
+import { config } from '../config/messages/config';
 import { UserResponseDto } from './dto/user-response.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Users) private userRepository: Repository<Users>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   /**
@@ -61,7 +61,7 @@ export class UserService {
    * @returns A promise resolving to returning the id, name, username, email if found.
    * @throws NotFoundException if the user with the specified Username is not found.
    */
-  async findUserByUsername(username: string): Promise<Users> {
+  async findUserByUsername(username: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { username },
       // select: ['id', 'username', 'email', 'name'],
@@ -79,7 +79,7 @@ export class UserService {
    * @returns A promise resolving to returning the id, name, username, email if found.
    * @throws NotFoundException if the user with the specified id is not found.
    */
-  async findUserById(id: string): Promise<Users> {
+  async findUserById(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: ['id', 'username', 'email', 'name'],
