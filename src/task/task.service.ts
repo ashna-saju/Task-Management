@@ -6,15 +6,15 @@ import {
 import { AuthService } from '../auth/auth.service'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Tasks } from '../entities/task.entity'
+import { Task } from '../entities/task.entity'
 import { TaskResponseDto } from './dto/task-response.dto'
 import { Repository } from 'typeorm'
-import { config } from 'src/config/messages/config'
+import { config } from '../config/messages/config'
 @Injectable()
 export class TaskService {
   constructor(
-    @InjectRepository(Tasks)
-    private taskRepository: Repository<Tasks>,
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
     private authService: AuthService
   ) {}
 
@@ -48,7 +48,7 @@ export class TaskService {
    * @returns {Promise<Task[]>} Array of tasks belonging to the user.
    * @throws {NotFoundException} Task not found.
    */
-  async getTasksByUserId(userId: string): Promise<Tasks[]> {
+  async getTasksByUserId(userId: string): Promise<Task[]> {
     const tasks = await this.taskRepository.find({ where: { userId } })
     if (!tasks || tasks.length === 0) {
       throw new NotFoundException(config.NO_TASKS_FOUND)
@@ -68,7 +68,7 @@ export class TaskService {
   async updateTask(
     token: string,
     id: number,
-    updateTaskDto: Partial<Tasks>
+    updateTaskDto: Partial<Task>
   ): Promise<TaskResponseDto> {
     const task = await this.taskRepository.findOne({ where: { id } })
     const decodedUser = await this.authService.decodeToken(token)

@@ -5,14 +5,14 @@ import {
   OneToMany,
   CreateDateColumn
 } from 'typeorm'
-import { Tasks } from '../entities/task.entity'
+import { Task } from '../entities/task.entity'
 
 /**
  * Users
  * This entity represents a user in the system.
  */
 @Entity()
-export class Users {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string
   @Column()
@@ -30,6 +30,6 @@ export class Users {
    * tasks
    * A collection of tasks associated with this user
    */
-  @OneToMany(() => Tasks, (task) => task.userId)
-  task: Tasks[]
+  @OneToMany(() => Task, (task) => task.userId)
+  task: Task[]
 }

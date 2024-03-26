@@ -5,7 +5,7 @@ import { jwtConstants } from './contants'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 import { UserModule } from '../user/user.module'
-import { Users } from '../entities/user.entity'
+import { User } from '../entities/user.entity'
 import { UserService } from '../user/user.service'
 
 /**
@@ -16,7 +16,7 @@ import { UserService } from '../user/user.service'
 @Module({
   imports: [
     UserModule,
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([User]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,

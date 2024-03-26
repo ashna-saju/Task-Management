@@ -11,8 +11,8 @@ import {
 import { AuthGuard } from './auth.guard'
 import { AuthService } from './auth.service'
 import { SignInDto } from './dto/signIn.dto'
-import { User } from '../user/user.decorator'
-import { Users } from '../entities/user.entity'
+import { Users } from '../user/user.decorator'
+import { User } from '../entities/user.entity'
 
 /**
  * AuthController
@@ -49,7 +49,7 @@ export class AuthController {
    */
   @UseGuards(AuthGuard)
   @Get()
-  async getProfile(@User() user: Users, @Request() req) {
+  async getProfile(@Users() user: User, @Request() req) {
     const decodedToken = await this.authService.decodeToken(
       req.headers.authorization.split(' ')[1]
     )
