@@ -6,7 +6,7 @@ import {
   MaxLength,
   IsEnum
 } from 'class-validator'
-import { config } from 'src/config/messages/config'
+import { config } from '../../config/messages/config'
 
 /**
  * Enum representing the priority of a task.
@@ -18,7 +18,7 @@ enum Priority {
 }
 
 /**
- * Data Transfer Object (DTO) for creating a new task.
+ * Data Transfer Object for creating a new task.
  */
 export class CreateTaskDto {
   id: number

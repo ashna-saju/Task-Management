@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '../auth/auth.guard'
 import { UserService } from './user.service'
-import { Users } from '../entities/user.entity'
+import { User } from '../entities/user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto } from './dto/user-response.dto'
 import { config } from '../config/messages/config'
-import { User } from './user.decorator'
+import { Users } from './user.decorator'
 
 /**
  * UserController
@@ -59,7 +59,7 @@ export class UserController {
    */
   @Post()
   async createUser(
-    @User() user: Users,
+    @Users() user: User,
     @Body() createUserDto: CreateUserDto
   ): Promise<UserResponseDto> {
     try {
@@ -86,9 +86,9 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get(':username')
   async getUserByUsername(
-    @User() user: Users,
+    @Users() user: User,
     @Param('username') username: string
-  ): Promise<Users> {
+  ): Promise<User> {
     return this.userService.findUserByUsername(username)
   }
 
@@ -108,9 +108,9 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('id/:id')
   async findUserById(
-    @User() user: Users,
+    @Users() user: User,
     @Param('id') id: string
-  ): Promise<Users> {
+  ): Promise<User> {
     return this.userService.findUserById(id)
   }
 
@@ -132,8 +132,8 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Patch()
   async updateUser(
-    @User() user: Users,
-    @Body() updateUserDto: Partial<Users>,
+    @Users() user: User,
+    @Body() updateUserDto: Partial<User>,
     @Request() req,
     id: string
   ): Promise<UserResponseDto> {
@@ -159,7 +159,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Delete()
   async deleteUser(
-    @User() user: Users,
+    @Users() user: User,
     @Request() req,
     id: string
   ): Promise<UserResponseDto> {

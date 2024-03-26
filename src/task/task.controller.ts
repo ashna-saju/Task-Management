@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '../auth/auth.guard'
 import { CreateTaskDto } from './dto/create-task.dto'
-import { Tasks } from '../entities/task.entity'
+import { Task } from '../entities/task.entity'
 import { TaskService } from './task.service'
 
 /**
@@ -104,7 +104,7 @@ export class TaskController {
   async updateTask(
     @Request() req,
     @Param('id') id: number,
-    @Body() updateTaskDto: Partial<Tasks>
+    @Body() updateTaskDto: Partial<Task>
   ) {
     const token = req.headers.authorization.replace('Bearer ', '')
     return this.taskService.updateTask(token, id, updateTaskDto)
