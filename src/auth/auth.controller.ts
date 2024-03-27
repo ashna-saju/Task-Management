@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
   UseGuards
 } from '@nestjs/common'
 import { AuthGuard } from './auth.guard'
@@ -13,6 +12,7 @@ import { AuthService } from './auth.service'
 import { SignInDto } from './dto/signIn.dto'
 import { Users } from '../user/user.decorator'
 import { User } from '../entities/user.entity'
+import { UserService } from 'src/user/user.service'
 
 /**
  * AuthController
@@ -22,8 +22,10 @@ import { User } from '../entities/user.entity'
  */
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
-
+  constructor(
+    private authService: AuthService,
+    private readonly userService: UserService
+  ) {}
   //API URL: POST:/auth
   //Login using user details
   //Request body shall contain
@@ -45,16 +47,12 @@ export class AuthController {
   /**
    * Function to retrieve the user profile.
    * add the access token in the bearer token section.
-   * @returns The user object from the request.
+   * @returns A promise resolving to the profile details of the authenticated user.
    */
   @UseGuards(AuthGuard)
   @Get()
-  async getProfile(@Users() user: User, @Request() req) {
-    const decodedToken = await this.authService.decodeToken(
-      req.headers.authorization.split(' ')[1]
-    )
-    const { id, username, name, email } = decodedToken
-    return { id, username, name, email }
+  async getProfile(@Users() user: User) {
+    const userDetails = await this.userService.findUserById(user.id)
+    return userDetails
   }
 }
-
