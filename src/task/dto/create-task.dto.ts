@@ -19,6 +19,10 @@ enum Priority {
 
 /**
  * Data Transfer Object for creating a new task.
+ * Static method to trim whitespace from title and description fields
+ * for a given CreateTaskDto object.
+ * @param createTaskDto The CreateTaskDto object to be modified.
+ * @returns The modified CreateTaskDto object with trimmed fields.
  */
 export class CreateTaskDto {
   id: number
@@ -55,4 +59,10 @@ export class CreateTaskDto {
   @IsBoolean()
   @IsNotEmpty({ message: config.COMPLETION_STATUS_REQUIRED_MESSAGE })
   completed: boolean
+  static trimTaskFields(createTaskDto: CreateTaskDto): CreateTaskDto {
+    createTaskDto.title = createTaskDto.title.trim()
+    createTaskDto.description = createTaskDto.description.trim()
+    return createTaskDto
+  }
 }
+

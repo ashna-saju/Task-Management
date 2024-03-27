@@ -57,3 +57,4 @@ export class AuthController {
     return { id, username, name, email }
   }
 }
+

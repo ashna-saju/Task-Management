@@ -10,6 +10,7 @@ import { Task } from '../entities/task.entity'
 import { TaskResponseDto } from './dto/task-response.dto'
 import { Repository } from 'typeorm'
 import { config } from '../config/messages/config'
+
 @Injectable()
 export class TaskService {
   constructor(
@@ -29,14 +30,13 @@ export class TaskService {
     token: string,
     createTaskDto: CreateTaskDto
   ): Promise<TaskResponseDto> {
+    CreateTaskDto.trimTaskFields(createTaskDto);
     const decodedUser = await this.authService.decodeToken(token)
     if (!decodedUser || !decodedUser.id) {
       throw new UnauthorizedException(config.INVALID_OR_MISSING_TOKEN_MESSAGE)
     }
     const userId = decodedUser.id
     createTaskDto.userId = userId
-    createTaskDto.title = createTaskDto.title.trim()
-    createTaskDto.description = createTaskDto.description.trim()
     const newTask = this.taskRepository.create({ ...createTaskDto })
     await this.taskRepository.save(newTask)
     return new TaskResponseDto(true, config.TASK_CREATED_SUCCESSFUL)
@@ -111,3 +111,4 @@ export class TaskService {
     return new TaskResponseDto(true, config.TASK_DELETED_SUCCESSFUL)
   }
 }
+
