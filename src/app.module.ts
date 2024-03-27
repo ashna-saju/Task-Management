@@ -24,7 +24,7 @@ import { TaskModule } from './task/task.module'
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       namingStrategy: new SnakeNamingStrategy()
     }),
     UserModule,
@@ -33,3 +33,4 @@ import { TaskModule } from './task/task.module'
   ]
 })
 export class AppModule {}
+

@@ -39,3 +39,4 @@ export const config = {
   ERROR_INVALID_CREDENTIALS: 'Invalid credentials',
   ERROR_INVALID_TOKEN_PAYLOAD: 'Invalid token payload'
 }
+
