@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -15,8 +14,8 @@ import { UserService } from './user.service'
 import { User } from '../entities/user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto } from './dto/user-response.dto'
-import { config } from '../config/messages/config'
 import { Users } from './user.decorator'
+import { ViewUserResponseDto } from './dto/view-user-response.dto'
 
 /**
  * UserController
@@ -62,12 +61,7 @@ export class UserController {
     @Users() user: User,
     @Body() createUserDto: CreateUserDto
   ): Promise<UserResponseDto> {
-    try {
-      await this.userService.createUser(createUserDto)
-      return new UserResponseDto(true, config.REGISTRATION_SUCCESSFUL)
-    } catch (error) {
-      throw new BadRequestException(error.message)
-    }
+    return this.userService.createUser(createUserDto)
   }
 
   //API URL: GET:/users/:username
@@ -88,7 +82,7 @@ export class UserController {
   async getUserByUsername(
     @Users() user: User,
     @Param('username') username: string
-  ): Promise<User> {
+  ): Promise<ViewUserResponseDto> {
     return this.userService.findUserByUsername(username)
   }
 
@@ -109,8 +103,8 @@ export class UserController {
   @Get('id/:id')
   async findUserById(
     @Users() user: User,
-    @Param('id') id: string
-  ): Promise<User> {
+    @Param('id') id: string,
+  ): Promise<ViewUserResponseDto> {
     return this.userService.findUserById(id)
   }
 
@@ -168,3 +162,4 @@ export class UserController {
     return this.userService.deleteUser(token, id)
   }
 }
+

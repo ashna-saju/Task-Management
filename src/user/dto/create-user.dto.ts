@@ -10,7 +10,10 @@ import { config } from '../../config/messages/config'
 /**
  * CreateUserDto
  * This DTO class represents the data transfer object for creating a new user.
- * It includes fields for name, username, email, and password.
+ * There is a static method to trim whitespace from name and username fields,
+ * and convert the email field to lowercase for a given CreateUserDto object.
+ * @param createUserDto The CreateUserDto object to be modified.
+ * @returns The modified CreateUserDto object with trimmed and lowercase fields.
  */
 export class CreateUserDto {
   id: string
@@ -39,4 +42,12 @@ export class CreateUserDto {
   @IsNotEmpty({ message: config.PASSWORD_REQUIRED_MESSAGE })
   @IsString()
   password: string
+
+  static trimUserFields(createUserDto: CreateUserDto): CreateUserDto {
+    createUserDto.name = createUserDto.name.trim()
+    createUserDto.username = createUserDto.username.trim()
+    createUserDto.email = createUserDto.email.trim().toLowerCase()
+    return createUserDto
+  }
 }
+

@@ -26,3 +26,4 @@ export function decodePassword(
   }
   return bcrypt.compareSync(rawPassword, hashedPassword)
 }
+
