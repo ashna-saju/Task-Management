@@ -56,3 +56,4 @@ export class AuthController {
     return userDetails
   }
 }
+
