@@ -13,6 +13,7 @@ import { AuthService } from './auth.service'
 import { SignInDto } from './dto/signIn.dto'
 import { Users } from '../user/user.decorator'
 import { User } from '../entities/user.entity'
+import { UserService } from 'src/user/user.service'
 
 /**
  * AuthController
@@ -22,7 +23,10 @@ import { User } from '../entities/user.entity'
  */
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   //API URL: POST:/auth
   //Login using user details
@@ -50,11 +54,8 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get()
   async getProfile(@Users() user: User, @Request() req) {
-    const decodedToken = await this.authService.decodeToken(
-      req.headers.authorization.split(' ')[1]
-    )
-    const { id, username, name, email } = decodedToken
-    return { id, username, name, email }
+    const userId = req.user.id
+    const userDetails = await this.userService.findUserById(userId)
+    return userDetails
   }
 }
-
