@@ -23,7 +23,7 @@ import { config } from '../config/messages/config'
  * @throws UnauthorizedException If the JWT token is missing or invalid.
  */
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService) { }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
     const token = this.extractTokenFromHeader(request)

@@ -27,7 +27,7 @@ import { ViewUserResponseDto } from './dto/view-user-response.dto'
  */
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   //API URL-POST:/users
   //Create user details
@@ -78,7 +78,7 @@ export class UserController {
    * @throws NotFoundException if the user with the specified username is not found.
    */
   @UseGuards(AuthGuard)
-  @Get(':username')
+  @Get('username/:username')
   async getUserByUsername(
     @Users() user: User,
     @Param('username') username: string
@@ -103,7 +103,7 @@ export class UserController {
   @Get('id/:id')
   async findUserById(
     @Users() user: User,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<ViewUserResponseDto> {
     return this.userService.findUserById(id)
   }
@@ -131,7 +131,7 @@ export class UserController {
     @Request() req,
     id: string
   ): Promise<UserResponseDto> {
-    id = req.user.id
+    id = req.user.id;
     const token = req.headers.authorization.replace('Bearer ', '')
     return this.userService.updateUser(token, id, updateUserDto)
   }
@@ -160,6 +160,22 @@ export class UserController {
     id = req.user.id
     const token = req.headers.authorization.replace('Bearer ', '')
     return this.userService.deleteUser(token, id)
+  }
+
+  //API URL: GET:/users/me
+  /**
+  * Function to retrieve the user profile.
+  * add the access token in the bearer token section.
+  * @returns The user object from the request.
+  */
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async getProfile(
+    @Users() user: User,
+    @Request() req
+  ): Promise<ViewUserResponseDto> {
+    const userId = req.user.id
+    return await this.userService.findUserById(userId)
   }
 }
 

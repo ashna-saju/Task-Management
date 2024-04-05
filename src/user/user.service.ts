@@ -16,7 +16,7 @@ import { ViewUserResponseDto } from './dto/view-user-response.dto'
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>
-  ) {}
+  ) { }
 
   /**
    * createUser
@@ -68,17 +68,12 @@ export class UserService {
   async findUserByUsername(username: string): Promise<ViewUserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { username },
+      select: ['id', 'username', 'email', 'name', 'password']
     })
     if (!user) {
       throw new NotFoundException(config.USER_NOT_FOUND)
     }
-    return new ViewUserResponseDto(
-      user.id,
-      user.name,
-      user.username,
-      user.email,
-      user.password
-    )
+    return user
   }
 
   /**
