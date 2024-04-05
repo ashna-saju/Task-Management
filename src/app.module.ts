@@ -32,5 +32,5 @@ import { TaskModule } from './task/task.module'
     AuthModule
   ]
 })
-export class AppModule {}
+export class AppModule { }
 

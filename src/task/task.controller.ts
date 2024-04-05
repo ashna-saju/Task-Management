@@ -24,7 +24,7 @@ import { TaskService } from './task.service'
  */
 @Controller('tasks')
 export class TaskController {
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) { }
 
   //API URL-POST:/tasks
   //Create task details

@@ -1,18 +1,12 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
-  Post,
-  Request,
-  UseGuards
+  Post
 } from '@nestjs/common'
-import { AuthGuard } from './auth.guard'
 import { AuthService } from './auth.service'
 import { SignInDto } from './dto/signIn.dto'
-import { Users } from '../user/user.decorator'
-import { User } from '../entities/user.entity'
 import { UserService } from 'src/user/user.service'
 
 /**
@@ -26,7 +20,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService
-  ) {}
+  ) { }
 
   //API URL: POST:/auth
   //Login using user details
@@ -43,19 +37,5 @@ export class AuthController {
   async signIn(@Body() signInDto: SignInDto) {
     const { username, password } = signInDto
     return this.authService.signIn(username, password)
-  }
-
-  //API URL: GET:/auth
-  /**
-   * Function to retrieve the user profile.
-   * add the access token in the bearer token section.
-   * @returns The user object from the request.
-   */
-  @UseGuards(AuthGuard)
-  @Get()
-  async getProfile(@Users() user: User, @Request() req) {
-    const userId = req.user.id
-    const userDetails = await this.userService.findUserById(userId)
-    return userDetails
   }
 }

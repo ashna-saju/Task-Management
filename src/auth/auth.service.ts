@@ -8,7 +8,7 @@ export class AuthService {
   constructor(
     private usersService: UserService,
     private jwtService: JwtService
-  ) {}
+  ) { }
 
   /**
    * Function to authenticate a user based on provided credentials

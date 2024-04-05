@@ -17,7 +17,7 @@ export class TaskService {
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
     private authService: AuthService
-  ) {}
+  ) { }
 
   /**
    * Creates a new task.
